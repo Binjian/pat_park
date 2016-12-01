@@ -10,7 +10,7 @@ function draw_vehicle (loc, cov, color, configuration)
 %-------------------------------------------------------
 % global configuration;
 
-robot_size = 0.1;
+robot_size = 2;
 
 vertices = [1.5 -1 -1 1.5
        0    1 -1  0 ]*robot_size;

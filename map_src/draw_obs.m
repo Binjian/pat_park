@@ -1,5 +1,5 @@
 
-function draw_obs (observations, configuration)
+function draw_obs_nav (observations, configuration)
 %-------------------------------------------------------
 % University of Zaragoza
 % Centro Politecnico Superior
