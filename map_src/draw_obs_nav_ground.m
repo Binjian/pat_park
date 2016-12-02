@@ -28,7 +28,7 @@ if(abs(object_of_interest_id)>0.5)
 	plot(x, y, 'rd','MarkerSize',20); 
 end
 
-for p = 1:length(valid_fuse),
+for p = 1:length(valid_fuse)
     if configuration.ellipses
         %draw object location ellipse
         %draw_ellipse (observations.z(2*p-1:2*p), observations.R(2*p-1:2*p, 2*p-1:2*p), 'g');
