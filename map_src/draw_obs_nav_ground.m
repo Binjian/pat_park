@@ -17,6 +17,7 @@ x = object_list(valid_fuse,2);%observations.z(1:2:end);
 y = object_list(valid_fuse,4);%observations.z(2:2:end);
 plot(x, y, ['g' '+']);
 %draw raw srr data;
+ob_id = sensor_data_raw(:,1);
 valid_srr = find(ob_id);
 x = sensor_data_raw(valid_srr,2);%observations.z(1:2:end);
 y = sensor_data_raw(valid_srr,3);%observations.z(2:2:end);
@@ -32,10 +33,10 @@ for p = 1:length(valid_fuse)
     if configuration.ellipses
         %draw object location ellipse
         %draw_ellipse (observations.z(2*p-1:2*p), observations.R(2*p-1:2*p, 2*p-1:2*p), 'g');
-        obs_pos = [object_list(valid_fuse(p),2),object_list(valid_fuse(p),4)];
-        obs_pos_cov = [object_list(valid_fuse(p),11), object_list(valid_fuse(p),13);...
-        			   object_list(valid_fuse(p),19), object_list(valid_fuse(p),21)];
-        draw_ellipse (obs_pos, obs_pos_cov, 'g');
+    % obs_pos = [object_list(valid_fuse(p),2),object_list(valid_fuse(p),4)];
+    % obs_pos_cov = [object_list(valid_fuse(p),11), object_list(valid_fuse(p),13);...
+    % 			   object_list(valid_fuse(p),19), object_list(valid_fuse(p),21)];
+    % draw_ellipse (obs_pos, obs_pos_cov, 'g');
 
         %draw object velocity arrow and its covariance ellipse
 	    initial_point=[object_list(valid_fuse(p),2),object_list(valid_fuse(p),4)];

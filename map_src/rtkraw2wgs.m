@@ -20,4 +20,4 @@ wgs_ts_m = floor((rtk_gps_ts-wgs_ts_h*10000 - wgs_ts_s)/100);
 wgs_ts_in_sec = wgs_ts_h*3600+wgs_ts_m*60+wgs_ts_s;
 
 
-wgs_yaw = rtk_gps_yaw*pi/360;
+wgs_yaw = rtk_gps_yaw*pi/180;
