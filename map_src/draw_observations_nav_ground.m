@@ -2,7 +2,8 @@
 function draw_observations_nav_ground (innerLine_coordinate, innerLine_Vertex_index,...
                                 middleLine_coordinate, middleLine_Vertex_index,...
                                 outerLine_coordinate, outerLine_Vertex_index,...
-                                landmarks, local_landmarks_id, vehicle_state, object_list, ...
+                                landmarks, landmarks_in_proximity_id_in_front,...
+                                landmarks_in_proximity_id_in_rear, vehicle_state, object_list, ...
                                 object_of_interest_id, sensor_data_raw, ...
                                 patac_navi, configuration)
 %-------------------------------------------------------
@@ -18,32 +19,38 @@ function draw_observations_nav_ground (innerLine_coordinate, innerLine_Vertex_in
 if configuration.step_by_step
     figure(configuration.observations); clf; axis equal; hold on;
     
-    visible = find(local_landmarks_id);
-    local_landmarks_id = local_landmarks_id(visible);
+
+    draw_map_nav_lnm (innerLine_coordinate, innerLine_Vertex_index,...
+                        middleLine_coordinate, middleLine_Vertex_index,...
+                        outerLine_coordinate, outerLine_Vertex_index,configuration);
+
+    visible_front = find(landmarks_in_proximity_id_in_front);
+    local_landmarks_id = landmarks_in_proximity_id_in_front(visible_front);
     local_landmarks = landmarks(local_landmarks_id,:) ;
+    draw_map_nav_ldm (local_landmarks,2,configuration);
+
+    visible_rear = find(landmarks_in_proximity_id_in_rear);
+    local_landmarks_id = landmarks_in_proximity_id_in_rear(visible_rear);
+    local_landmarks = landmarks(local_landmarks_id,:) ;
+    draw_map_nav_ldm (local_landmarks,0.5,configuration);
+    
+
+    %draw vehicle
+    vehicle.x = vehicle_state(1:3);
+    vehicle.P = zeros(3, 3);        
+    draw_vehicle(vehicle.x, vehicle.P, 'b', configuration);
+    %arrow as vehicle velocity vector
+    initial_point = vehicle_state(1:2);
+    end_point = initial_point+vehicle_state(4:5);
+    generate_arrow(initial_point, end_point, 'r');
+
+    %draw navigation list;
+    x = patac_navi(:,1);%observations.z(1:2:end);
+    y = patac_navi(:,2);%observations.z(2:2:end);
+    plot(x, y, 'go','MarkerSize',10);
+
     configuration.ground = configuration.observations;
-    draw_map_nav_ground (innerLine_coordinate,innerLine_Vertex_index,...
-                      middleLine_coordinate,middleLine_Vertex_index,...
-                      outerLine_coordinate,outerLine_Vertex_index,...
-                      local_landmarks, vehicle_state,patac_navi,configuration);
-
-    % vehicle.x = vehicle_state(1:3);
-    % vehicle.P = zeros(3, 3);
-    
-    % %draw vehicle
-    % draw_vehicle(vehicle.x, vehicle.P, 'b', configuration);
-    % %arrow as vehicle velocity vector
-    % initial_point=vehicle_state(1:2);
-    % end_point=initial_point+vehicle_state(4:5);
-    % generate_arrow(initial_point, end_point, 'c'); 
-
-    % if nargin == 4 % which is used
-    %     [ix, iy, ind] = obs_rows(which);
-    %     observations.z = observations.z(ind);
-    %     observations.R = observations.R(ind,ind);
-    %     observations.m = length(which);
-    % end
-    
+     
     %draw observations
     draw_obs_nav_ground (object_list,sensor_data_raw,object_of_interest_id,configuration);
     
