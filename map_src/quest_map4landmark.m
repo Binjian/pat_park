@@ -69,7 +69,7 @@ if(size(visible,1)~=0)
 		if(option.clockWise == 0) %counter-clockwise
             landmarks_in_proximity_id_in_rear(1:size(visible,1)) = visible;
         else%clockwise
-            landmarks_in_proximity_id_in_rear(1:size(visible,1)) = flip(visible);
+            landmarks_in_proximity_id_in_rear(1:size(visible,1)) = flipud(visible);
         end 
     elseif(abs(ldm_closest_in_path_ID-1)<1e-3)
 		landmarks_in_proximity_id_in_front(1:size(visible,1)) = visible;
@@ -82,8 +82,8 @@ if(size(visible,1)~=0)
 		else%clockwise
 			front_size = ldm_closest_in_path_ID;
 			rear_size = size(visible,1) - ldm_closest_in_path_ID;
-			landmarks_in_proximity_id_in_front(1:front_size) = flip(visible(1:ldm_closest_in_path_ID));
-			landmarks_in_proximity_id_in_rear(1:rear_size)= flip(visible(ldm_closest_in_path_ID+1:end));
+			landmarks_in_proximity_id_in_front(1:front_size) = flipud(visible(1:ldm_closest_in_path_ID));
+			landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(ldm_closest_in_path_ID+1:end));
 		end
 	end
 else
