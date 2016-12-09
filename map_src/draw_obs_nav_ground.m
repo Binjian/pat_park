@@ -42,6 +42,7 @@ for p = 1:length(valid_fuse)
 	    initial_point=[object_list(valid_fuse(p),2),object_list(valid_fuse(p),4)];
 	    end_point=initial_point+[object_list(valid_fuse(p),3),object_list(valid_fuse(p),5)];
 	    generate_arrow(initial_point, end_point, 'c'); 
+	    
         % obs_pos = (initial_point+end_point)/2;
         % obs_pos_cov = [object_list(valid_fuse(p),16), object_list(valid_fuse(p),18);...
         % 			   object_list(valid_fuse(p),24), object_list(valid_fuse(p),26)];
