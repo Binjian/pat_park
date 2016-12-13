@@ -1,4 +1,4 @@
-function [object_of_interest_id, ego_location] = objects_of_interest(object_list,...
+function [obj_closest_in_path_ID, obj_closest_in_next_path_ID, ego_location] = objects_of_interest(object_list,object_num,...
 	x_in_lcs, y_in_lcs, ...
 	innerLine_coordinate, innerLine_Vertex_index, ...
 	middleLine_coordinate, middleLine_Vertex_index,...
@@ -44,7 +44,7 @@ end
 
 
 %find object in ego lane and next lane
-object_list_lane_loc = object_list(:,9) ;
+object_list_lane_loc = object_list(1:object_num,9) ;
 objects_in_ego_lane_id = find(object_list_lane_loc == ego_location);
 objects_in_next_lane_id = find( object_list_lane_loc ~= ego_location ...
                               &  object_list_lane_loc ~= 3 ...
@@ -57,9 +57,9 @@ side_direction_obj      = zeros(max_len,2);
 nearestIndex_obj        = zeros(max_len,2);
 
 if(size(objects_in_ego_lane_id,1)~=0)
-    objects_in_ego_lane  =  object_list(objects_in_ego_lane_id,2:3);
+    objects_in_ego_lane  =  [object_list(objects_in_ego_lane_id,2),object_list(objects_in_ego_lane_id,4)];
     %Initialize search ego-lane
-    p = object_list(objects_in_ego_lane_id(1),2:3); %objects_in_ego_lane(1,:);
+    p = objects_in_ego_lane(1,:);%object_list(objects_in_ego_lane_id(1),2:3); %
     [lat_distance_obj(1,1),side_direction_obj(1,1),nearestIndex_obj(1,1)] = calDistance(p,middleLine_coordinate,middleLine_Vertex_index,option);
     obj_closest_in_path_ID_Index = nearestIndex_obj(1,1);
     obj_closest_in_path_ID = objects_in_ego_lane_id(1);
@@ -87,7 +87,7 @@ else
 end
 
 if(size(objects_in_next_lane_id,1)~=0)
-    objects_in_next_lane =  object_list(objects_in_next_lane_id,2:3);
+    objects_in_next_lane =  [object_list(objects_in_next_lane_id,2),object_list(objects_in_next_lane_id,4)];
     %Initialize search next-lane
     p = objects_in_next_lane(1,:);
     [lat_distance_obj(1,2),side_direction_obj(1,2),nearestIndex_obj(1,2)] = calDistance(p,middleLine_coordinate,middleLine_Vertex_index,option);
@@ -123,4 +123,4 @@ end
 
 %flipud/fliplr/flip(a,dim);
 %sortrows
-object_of_interest_id = obj_closest_in_path_ID;
+% object_of_interest_id = obj_closest_in_path_ID;

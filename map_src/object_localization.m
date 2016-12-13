@@ -1,4 +1,4 @@
-function [object_list_update] = object_localization(object_list,...
+function object_list_update = object_localization(object_list, object_num,...
 	innerLine_coordinate, innerLine_Vertex_index, ...
 	middleLine_coordinate, middleLine_Vertex_index,...
 	outerLine_coordinate, outerLine_Vertex_index,...
@@ -9,7 +9,7 @@ distance 			= zeros(size(object_list,1),3);
 side_direction 		= zeros(size(object_list,1),3);
 nearestIndex 		= zeros(size(object_list,1),3);
 
-for  i = 1:size(object_list,1)
+for  i = 1:object_num
     if(object_list(i,1)~=0)
         p = [object_list(i,2),object_list(i,4)];%2nd and 4th colomn are range x and range y
         [distance(i,1),side_direction(i,1),nearestIndex(i,1)] = calDistance(p,innerLine_coordinate, innerLine_Vertex_index,option);
@@ -18,7 +18,7 @@ for  i = 1:size(object_list,1)
     end
 end
 
-for i = 1:size(object_list,1)
+for i = 1:object_num
     if(option.clockWise == 0)%counter-clockwise
         switch(sum(side_direction(i,:)))
             case  3  %( 1  1  1) outside outer ring
