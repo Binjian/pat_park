@@ -1,0 +1,28 @@
+% 
+%   enumeration
+%   XCrossing_Stop (11) % 十字路口停止线
+%   XCrossing_Start (12) % 十字路口目标车道进入线
+%   TCrossing_Stop (21)%T字路口停止线
+%   TCrossing_Start (22)%T字路口目标车道进入线
+%   ZCrossing (30)%人行横道线
+%   Stop_1 (51)%边线1（沿车道横向边线）逆时针进入，摆渡车停车点。二号楼一号楼门口
+%   Stop_2 (52)%边线2（沿车道横向边线）逆时针驶出
+%   OL_LeftTurn_Stop (61)% 左转L形路口停止线，外道
+%   OL_LeftTurn_Start (62)% 左转L形路口进入线，外道
+%   RightTurn_Stop (71)% 右转L形路口停止线
+%   RightTurn_Start (72)% 右转L形路口进入线
+%   ParkSlotOnRoad_Stop (81)% 路上停车位边线1（沿车道横向边线）
+%   ParkSlotOnRoad_Start (82)% 路上停车位边线2（沿车道横向边线）
+%   ParkSlotOffRoad_Start (91)% 路边停车位边线1（沿车道横向边线）
+%   ParkSlotOffRoad_Stop  (92)% 路边停车位边线2（沿车道横向边线）
+%   RoadChange (100)% 车道宽度变化点，如两点间距离暗示车道宽度，则此时两点选取应保证，两点连线同测量处的车道垂直，或者增加车道宽度的域。
+%   SpeedLimit (110)%限速标志，点类型
+%   GroundArrow (120)%地上箭头（参考EPM3的箭头位置定义），点类型
+%   TrafficLight (130)%交通灯位置，点类型
+%   IL_LeftTurn_Stop (63)% 左转L形路口停止线，内道
+%   IL_LeftTurn_Start (64)% 左转L形路口进入线，内道
+%   UnClassified (180)%其他
+%   end
+
+%地标第六列属性：Unknown: 0， valid for inner lane: 1，valid for outer lane: 2，valid for both inner and outer lane: 3
+
