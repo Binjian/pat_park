@@ -79,6 +79,12 @@ if(size(visible,1)~=0)
                 if(nearestIndex_Ego>2)
                     front_cyclic_1 = find(visible<=79);
                     front_cyclic_2 = find(visible>=ldm_ID);
+                    if(isempty(front_cyclic_1))
+                    	front_cyclic_1=zeros(0,1);
+                    end
+                    if(isempty(front_cyclic_2))
+                    	front_cyclic_2=zeros(0,1);
+                    end
                     front_cyclic = intersect(front_cyclic_1,front_cyclic_2);
                     rear_cyclic_1 = find(visible>79);
                     rear_cyclic_2 = find(visible<ldm_ID);
@@ -87,7 +93,9 @@ if(size(visible,1)~=0)
 %                     rear_cyclic = union(rear_cyclic_1,rear_cyclic_2);
                     front_size = size(front_cyclic,1);
 %                     rear_size  =  size(rear_cyclic,1);
-                    landmarks_in_proximity_id_in_front(1:front_size) = visible(front_cyclic);
+					if(front_size~=0)				                    
+						landmarks_in_proximity_id_in_front(1:front_size) = visible(front_cyclic);
+					end
                     if(rear_size_2~=0)
                         landmarks_in_proximity_id_in_rear(1:rear_size_2)= flipud(visible(rear_cyclic_2));
                     end
@@ -98,6 +106,12 @@ if(size(visible,1)~=0)
                     front_cyclic_1 = find(visible<=79);
                     front_cyclic_2_1 = find(nearestIndex_ldm==2);
                     front_cyclic_2_2 = find(visible>79);
+                    if(isempty(front_cyclic_2_1))
+                    	front_cyclic_2_1=zeros(0,1);
+                    end
+                    if(isempty(front_cyclic_2_2))
+                    	front_cyclic_2_2=zeros(0,1);
+                    end
                     front_cyclic_2 = intersect(front_cyclic_2_1,front_cyclic_2_2);
                     front_size_1 = size(front_cyclic_1,1);
                     front_size_2 = size(front_cyclic_2,1);
@@ -105,6 +119,12 @@ if(size(visible,1)~=0)
 %                 front_size = size(front_cyclic,1);
                     rear_cyclic_1 = find(visible>79);
                     rear_cyclic_2 = find(nearestIndex_ldm~=2);
+                    if(isempty(rear_cyclic_1))
+                    	rear_cyclic_1=zeros(0,1);
+                    end
+                    if(isempty(rear_cyclic_2))
+                    	rear_cyclic_2=zeros(0,1);
+                    end                   
                     rear_cyclic = intersect(rear_cyclic_1,rear_cyclic_2);
                     rear_size  =  size(rear_cyclic,1);
 %                     front_cyclic = find(visible<=79 || visible>=ldm_ID);
@@ -117,7 +137,9 @@ if(size(visible,1)~=0)
                     if(front_size_1~=0)
                         landmarks_in_proximity_id_in_front(front_size_2+1:front_size_2+front_size_1) = visible(front_cyclic_1);
                     end
-                    landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));
+                    if(rear_size~=0)
+                    	landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));
+                    end
                end
             elseif(middleLine_Vertex_index(4,1)<nearestIndex_Ego && nearestIndex_Ego<middleLine_Vertex_index(4,2))%end
                 ldm_ID = visible(ldm_closest_in_path_ID);
@@ -125,7 +147,13 @@ if(size(visible,1)~=0)
                 front_cyclic_2 = find(visible>=ldm_ID);
 %                 front_cyclic = union(front_cyclic_1,front_cyclic_2);
                 rear_cyclic_1 = find(visible > 21);
-                rear_cyclic_2 = find(visible < ldm_ID);
+	            rear_cyclic_2 = find(visible < ldm_ID);
+                if(isempty(rear_cyclic_1))
+                	rear_cyclic_1=zeros(0,1);
+                end
+                if(isempty(rear_cyclic_2))
+                	rear_cyclic_2=zeros(0,1);
+                end
                 rear_cyclic = intersect(rear_cyclic_1,rear_cyclic_2);
 %                 front_size = size(front_cyclic,1);
                 rear_size  =  size(rear_cyclic,1);
@@ -140,7 +168,9 @@ if(size(visible,1)~=0)
                 if(front_size_1~=0)
                     landmarks_in_proximity_id_in_front(front_size_2+1:(front_size_1+front_size_2)) = visible(front_cyclic_1);
                 end
-                landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));               
+                if(rear_size~=0)
+                	landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));               
+                end
             else
                 landmarks_in_proximity_id_in_front(1:size(visible,1)) = visible;
             end
@@ -152,6 +182,12 @@ if(size(visible,1)~=0)
                 if(nearestIndex_Ego>2)
                     front_cyclic_1 = find(visible<=79);
                     front_cyclic_2 = find(visible>=ldm_ID);
+	                if(isempty(front_cyclic_1))
+	                	front_cyclic_1=zeros(0,1);
+	                end
+	                if(isempty(front_cyclic_2))
+	                	front_cyclic_2=zeros(0,1);
+	                end                    
                     front_cyclic = intersect(front_cyclic_1,front_cyclic_2);
                     rear_cyclic_1 = find(visible>79);
                     rear_cyclic_2 = find(visible<ldm_ID);
@@ -160,7 +196,9 @@ if(size(visible,1)~=0)
 %                     rear_cyclic = union(rear_cyclic_1,rear_cyclic_2);
                     front_size = size(front_cyclic,1);
 %                     rear_size  =  size(rear_cyclic,1);
-                    landmarks_in_proximity_id_in_front(1:front_size) = visible(front_cyclic);
+					if(front_size~=0)
+                    	landmarks_in_proximity_id_in_front(1:front_size) = visible(front_cyclic);
+                    end
                     if(rear_size_2~=0)
                         landmarks_in_proximity_id_in_rear(1:rear_size_2)= flipud(visible(rear_cyclic_2));
                     end
@@ -171,13 +209,25 @@ if(size(visible,1)~=0)
                     front_cyclic_1 = find(visible<=79);
                     front_cyclic_2_1 = find(nearestIndex_ldm==2);
                     front_cyclic_2_2 = find(visible>79);
+	                if(isempty(front_cyclic_2_1))
+	                	front_cyclic_2_1=zeros(0,1);
+	                end
+	                if(isempty(front_cyclic_2_2))
+	                	front_cyclic_2_2=zeros(0,1);
+	                end              
                     front_cyclic_2 = intersect(front_cyclic_2_1,front_cyclic_2_2);
                     front_size_1 = size(front_cyclic_1,1);
                     front_size_2 = size(front_cyclic_2,1);
-%                     front_cyclic = union(front_cyclic_1,front_cyclic_2);
+%                 front_cyclic = union(front_cyclic_1,front_cyclic_2);
 %                 front_size = size(front_cyclic,1);
                     rear_cyclic_1 = find(visible>79);
                     rear_cyclic_2 = find(nearestIndex_ldm~=2);
+	                if(isempty(rear_cyclic_1))
+	                	rear_cyclic_1=zeros(0,1);
+	                end
+	                if(isempty(rear_cyclic_2))
+	                	rear_cyclic_2=zeros(0,1);
+	                end              
                     rear_cyclic = intersect(rear_cyclic_1,rear_cyclic_2);
                     rear_size  =  size(rear_cyclic,1);
 %                     front_cyclic = find(visible<=79 || visible>=ldm_ID);
@@ -190,7 +240,9 @@ if(size(visible,1)~=0)
                     if(front_size_1~=0)
                         landmarks_in_proximity_id_in_front(front_size_2+1:front_size_2+front_size_1) = visible(front_cyclic_1);
                     end
-                    landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));
+                    if(rear_size~=0)
+                    	landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));
+                    end
                end
             elseif(middleLine_Vertex_index(4,1)<nearestIndex_Ego && nearestIndex_Ego<middleLine_Vertex_index(4,2))%end
                 ldm_ID = visible(ldm_closest_in_path_ID);
@@ -199,6 +251,12 @@ if(size(visible,1)~=0)
 %                 front_cyclic = union(front_cyclic_1,front_cyclic_2);
                 rear_cyclic_1 = find(visible > 21);
                 rear_cyclic_2 = find(visible < ldm_ID);
+                if(isempty(rear_cyclic_1))
+                	rear_cyclic_1=zeros(0,1);
+                end
+                if(isempty(rear_cyclic_2))
+                	rear_cyclic_2=zeros(0,1);
+                end                  
                 rear_cyclic = intersect(rear_cyclic_1,rear_cyclic_2);
 %                 front_size = size(front_cyclic,1);
                 rear_size  =  size(rear_cyclic,1);
@@ -213,7 +271,9 @@ if(size(visible,1)~=0)
                 if(front_size_1~=0)
                     landmarks_in_proximity_id_in_front(front_size_2+1:(front_size_1+front_size_2)) = visible(front_cyclic_1);
                 end
-                landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));               
+                if(rear_size~=0)
+	                landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));           
+	            end    
             else
                 front_size = size(visible,1) - ldm_closest_in_path_ID+1;
                 rear_size = ldm_closest_in_path_ID-1;
