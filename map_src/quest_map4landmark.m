@@ -16,7 +16,7 @@ function [landmarks_in_proximity_id_in_front, landmarks_in_proximity_id_in_rear]
 %Landmarks
 x1 = (double(landmarks(:,1))+double(landmarks(:,3)))/2 - ones(size(landmarks,1),1)*x_in_lcs;%landmarks column vector
 y1 = (double(landmarks(:,2))+double(landmarks(:,4)))/2 - ones(size(landmarks,1),1)*y_in_lcs;
-%visible = find( (abs(x1) <= roi.x) & (abs(y1) <= roi.y) );
+% visible = find( (abs(x1) <= roi.x) & (abs(y1) <= roi.y) );
 % distance2ego = (x1.^2 + y1.^2);
 % [min_dist, ind] = min(distance2ego);
 visible = find( (x1.^2 + y1.^2) <= configuration.proximity*configuration.proximity);
