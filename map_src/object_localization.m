@@ -5,16 +5,16 @@ function object_list_update = object_localization(object_list, object_num,...
 	 option)
 
 object_list_update	= object_list;
-distance 			= zeros(size(object_list,1),3);
+% distance 			= zeros(size(object_list,1),3);
 side_direction 		= zeros(size(object_list,1),3);
-nearestIndex 		= zeros(size(object_list,1),3);
+% nearestIndex 		= zeros(size(object_list,1),3);
 
 for  i = 1:object_num
     if(object_list(i,1)~=0)
         p = [object_list(i,2),object_list(i,4)];%2nd and 4th colomn are range x and range y
-        [distance(i,1),side_direction(i,1),nearestIndex(i,1)] = calDistance(p,innerLine_coordinate, innerLine_Vertex_index,option);
-        [distance(i,2),side_direction(i,2),nearestIndex(i,2)] = calDistance(p,middleLine_coordinate,middleLine_Vertex_index,option);
-        [distance(i,3),side_direction(i,3),nearestIndex(i,3)] = calDistance(p,outerLine_coordinate, outerLine_Vertex_index,option);
+        [~,side_direction(i,1)] = calDistance_fast(p,innerLine_coordinate, innerLine_Vertex_index,option);
+        [~,side_direction(i,2)] = calDistance_fast(p,middleLine_coordinate,middleLine_Vertex_index,option);
+        [~,side_direction(i,3)] = calDistance_fast(p,outerLine_coordinate, outerLine_Vertex_index,option);
     end
 end
 
