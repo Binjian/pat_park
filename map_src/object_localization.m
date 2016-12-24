@@ -12,9 +12,9 @@ side_direction 		= zeros(size(object_list,1),3);
 for  i = 1:object_num
     if(object_list(i,1)~=0)
         p = [object_list(i,2),object_list(i,4)];%2nd and 4th colomn are range x and range y
-        [~,side_direction(i,1)] = calDistance_fast(p,innerLine_coordinate, innerLine_Vertex_index,option);
-        [~,side_direction(i,2)] = calDistance_fast(p,middleLine_coordinate,middleLine_Vertex_index,option);
-        [~,side_direction(i,3)] = calDistance_fast(p,outerLine_coordinate, outerLine_Vertex_index,option);
+        side_direction(i,1) = point_inside_lane(p,innerLine_coordinate, innerLine_Vertex_index);
+        side_direction(i,2) = point_inside_lane(p,middleLine_coordinate,middleLine_Vertex_index);
+        side_direction(i,3) = point_inside_lane(p,outerLine_coordinate, outerLine_Vertex_index);
     end
 end
 

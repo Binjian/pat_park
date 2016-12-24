@@ -24,12 +24,12 @@ draw_map_nav_ldm (landmarks,0.5,configuration);
 vehicle.x = vehicle_state(1:3);
 vehicle.P = zeros(3, 3);
     
-%draw vehicle
-draw_vehicle(vehicle.x, vehicle.P, 'b', configuration);
-%arrow as vehicle velocity vector
-initial_point = vehicle_state(1:2);
-end_point = initial_point+vehicle_state(4:5);
-generate_arrow(initial_point, end_point, 'r');
+% %draw vehicle
+% draw_vehicle(vehicle.x, vehicle.P, 'b', configuration);
+% %arrow as vehicle velocity vector
+% initial_point = vehicle_state(1:2);
+% end_point = initial_point+vehicle_state(4:5);
+% generate_arrow(initial_point, end_point, 'r');
 
 
 %draw navigation list;

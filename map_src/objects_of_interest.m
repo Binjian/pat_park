@@ -5,17 +5,14 @@ function [obj_closest_in_path_ID, obj_closest_in_next_path_ID, ego_location] = o
 	outerLine_coordinate, outerLine_Vertex_index,...
 	 option)
 
-lat_distance_Ego 		= zeros(1,3);
-side_direction_Ego 		= zeros(1,3);
-nearestIndex_Ego 		= zeros(1,3);
-
+inside 		= zeros(1,3);
 p = [x_in_lcs,y_in_lcs];
-[lat_distance_Ego(1),side_direction_Ego(1),nearestIndex_Ego(1)] = calDistance(p,innerLine_coordinate, innerLine_Vertex_index,option);
-[lat_distance_Ego(2),side_direction_Ego(2),nearestIndex_Ego(2)] = calDistance(p,middleLine_coordinate,middleLine_Vertex_index,option);
-[lat_distance_Ego(3),side_direction_Ego(3),nearestIndex_Ego(3)] = calDistance(p,outerLine_coordinate, outerLine_Vertex_index,option);
+inside(1) = point_inside_lane(p,innerLine_coordinate, innerLine_Vertex_index);
+inside(2) = point_inside_lane(p,middleLine_coordinate, middleLine_Vertex_index);
+inside(3) = point_inside_lane(p,outerLine_coordinate, outerLine_Vertex_index);
 
 if(option.clockWise == 0)%counter-clockwise
-    switch(sum(side_direction_Ego))
+    switch(sum(inside))
         case  3  %( 1  1  1) outside outer ring what if in case of on the line, the output could be zero?!
         	ego_location = 3; 
         case  1  %( 1  1 -1)
@@ -64,7 +61,7 @@ if(size(objects_in_ego_lane_id,1)~=0)
     obj_closest_in_path_ID_Index = nearestIndex_obj(1,1);
     obj_closest_in_path_ID = objects_in_ego_lane_id(1);
 
-    %Find the closest in-path object (CIPV)
+    %Find the closest in-path object (CIPO)
     for  i = 2:size(objects_in_ego_lane,1)
         p = objects_in_ego_lane(i,:);
         [lat_distance_obj(i,1),side_direction_obj(i,1),nearestIndex_obj(i,1)]=calDistance(p,middleLine_coordinate,middleLine_Vertex_index,option); % projection onto the middleLine

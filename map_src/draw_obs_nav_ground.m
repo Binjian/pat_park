@@ -26,7 +26,7 @@ plot(x, y, ['b' 'x']);
 if(abs(object_of_interest_id)>0.5)
 	x = object_list(object_of_interest_id,2);%observations.z(1:2:end);
 	y = object_list(object_of_interest_id,4);%observations.z(2:2:end);
-	plot(x, y, 'rd','MarkerSize',20); 
+	plot(x, y, 'rd','MarkerSize',10); 
 end
 
 for p = 1:length(valid_fuse)
