@@ -1,7 +1,7 @@
 function object_list_update = object_localization(object_list, object_num,...
 	innerLine_coordinate, innerLine_Vertex_index, ...
 	middleLine_coordinate, middleLine_Vertex_index,...
-	outerLine_coordinate, outerLine_Vertex_index,...
+	outerLine_coordinate, outerLine_Vertex_index,lane_offset,...
 	 option)
 
 object_list_update	= object_list;
@@ -14,7 +14,8 @@ for  i = 1:object_num
         p = [object_list(i,2),object_list(i,4)];%2nd and 4th colomn are range x and range y
         side_direction(i,1) = point_inside_lane(p,innerLine_coordinate, innerLine_Vertex_index);
         side_direction(i,2) = point_inside_lane(p,middleLine_coordinate,middleLine_Vertex_index);
-        side_direction(i,3) = point_inside_lane(p,outerLine_coordinate, outerLine_Vertex_index);
+%         side_direction(i,3) = point_inside_lane(p,outerLine_coordinate, outerLine_Vertex_index);
+        side_direction(i,3) = point_inside_lane_offset(p,outerLine_coordinate, outerLine_Vertex_index,lane_offset);       
     end
 end
 
