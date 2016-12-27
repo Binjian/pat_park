@@ -1,4 +1,5 @@
-function [obj_closest_in_path_ID, obj_closest_in_next_path_ID, ego_location] = objects_of_interest_fast(object_list,object_num,...
+function [objects_in_ego_lane_sorted_behind, objects_in_next_lane_sorted_behind,...
+             ego_location] = objects_of_interest_fast(object_list,object_num,...
 	x_in_lcs, y_in_lcs, ...
 	innerLine_coordinate, innerLine_Vertex_index, ...
 	middleLine_coordinate, middleLine_Vertex_index,...
@@ -40,8 +41,8 @@ else%clockwise
 end
 
 if( ~(ego_location==2 || ego_location==1) ) 
-    obj_closest_in_path_ID = 0;
-    obj_closest_in_next_path_ID = 0;
+    objects_in_ego_lane_sorted_behind = zeros(1,0);
+    objects_in_next_lane_sorted_behind = zeros(1,0);
     return;
 end
 if(ego_location == 1)
@@ -67,47 +68,61 @@ objects_in_ego_lane_id = find(object_list_lane_loc == ego_location);
 objects_in_next_lane_id = find( object_list_lane_loc == next_lane);
 
 % objects_in_ego_lane_id(1:size(objects_in_next_lane_id_temp,1))=objects_in_ego_lane_id_temp;
-max_len = max(size(objects_in_ego_lane_id,1),size(objects_in_next_lane_id,1));
-dist2StartCorner_obj      = zeros(max_len,2);
-
 if(size(objects_in_ego_lane_id,1)~=0)
-    objects_in_ego_lane  =  [object_list(objects_in_ego_lane_id,2),object_list(objects_in_ego_lane_id,4)];
-    obj_closest_in_path_ID_dist = dist2StartCorner_veh+500;
-    obj_closest_in_path_ID = 0;
+    objects_in_ego_lane  =  [objects_in_ego_lane_id, object_list(objects_in_ego_lane_id,2),object_list(objects_in_ego_lane_id,4), zeros(size(objects_in_ego_lane_id,1),1)];
     %Find the closest in-path object (CIPO)
     for  i = 1:size(objects_in_ego_lane,1)
-        p = objects_in_ego_lane(i,:);
-        [~,dist2StartCorner_obj(i,1)]=point_projection2LNM(p, corner_1, corner_2); % projection onto the outerlane 
-
-        if (dist2StartCorner_obj(i,1) >= dist2StartCorner_veh && ...
-                dist2StartCorner_obj(i,1) <= obj_closest_in_path_ID_dist)
-            obj_closest_in_path_ID = objects_in_ego_lane_id(i);
-            obj_closest_in_path_ID_dist = dist2StartCorner_obj(i,1);
+        p = objects_in_ego_lane(i,2:3);
+        [~,objects_in_ego_lane(i,4)]=point_projection2LNM(p, corner_1, corner_2); % projection onto the outerlane 
+    end
+    objects_in_ego_lane_sorted = sortrows(objects_in_ego_lane,4);
+    objects_in_ego_lane_sorted_behind_id = find(objects_in_ego_lane_sorted(:,4)<dist2StartCorner_veh);
+    if(size(objects_in_ego_lane_sorted_behind_id,1)~=0)
+        obj_idx = objects_in_ego_lane_sorted_behind_id(end);
+        if(obj_idx<size(objects_in_ego_lane_sorted,1))
+            objects_in_ego_lane_sorted_behind_id = flipud(objects_in_ego_lane_sorted_behind_id);
+            objects_in_ego_lane_sorted_behind = [objects_in_ego_lane_sorted(obj_idx+1,1);...
+                                                 objects_in_ego_lane_sorted(objects_in_ego_lane_sorted_behind_id,1)];
+        else
+            objects_in_ego_lane_sorted_behind_id = flipud(objects_in_ego_lane_sorted_behind_id);
+            objects_in_ego_lane_sorted_behind = [0;...
+                                                 objects_in_ego_lane_sorted(objects_in_ego_lane_sorted_behind_id,1)];
         end
+    else
+        objects_in_ego_lane_sorted_behind = objects_in_ego_lane_sorted(1,1); 
     end
 else
-    obj_closest_in_path_ID = 0;
+    objects_in_ego_lane_sorted_behind = zeros(1,0);
 end
 
 % obj_closest_in_next_path_ID =0;
 if(size(objects_in_next_lane_id,1)~=0)
-    objects_in_next_lane =  [object_list(objects_in_next_lane_id,2),object_list(objects_in_next_lane_id,4)];
-    obj_closest_in_path_ID_dist = dist2StartCorner_veh+500;
-    obj_closest_in_next_path_ID = 0;
-
+    objects_in_next_lane =  [objects_in_next_lane_id, object_list(objects_in_next_lane_id,2),object_list(objects_in_next_lane_id,4),zeros(size(objects_in_next_lane_id,1),1)];
     %Find the closest Next Lane object
     for  i = 1:size(objects_in_next_lane,1)
-        p = objects_in_next_lane(i,:);
-        [~, dist2StartCorner_obj(i,2)] = point_projection2LNM(p, corner_1, corner_2);
-        if (dist2StartCorner_obj(i,2) > dist2StartCorner_veh && ...
-                dist2StartCorner_obj(i,2) < obj_closest_in_path_ID_dist)
-            obj_closest_in_next_path_ID = objects_in_next_lane_id(i);
-            obj_closest_in_path_ID_dist = dist2StartCorner_obj(i,2);
-        end
-     end    
+        p = objects_in_next_lane(i,2:3);
+        [~, objects_in_next_lane(i,4)] = point_projection2LNM(p, corner_1, corner_2);
+    end
+    objects_in_next_lane_sorted = sortrows(objects_in_next_lane,4);
+    objects_in_next_lane_sorted_behind_id = find(objects_in_next_lane_sorted(:,4)<dist2StartCorner_veh);
+    if(size(objects_in_next_lane_sorted_behind_id,1)~=0)
+        obj_idx = objects_in_next_lane_sorted_behind_id(end);
+        if(obj_idx<size(objects_in_next_lane_sorted,1))
+            objects_in_next_lane_sorted_behind_id = flipud(objects_in_next_lane_sorted_behind_id);
+            objects_in_next_lane_sorted_behind = [objects_in_next_lane_sorted(obj_idx+1,1);...
+                                                 objects_in_next_lane_sorted(objects_in_next_lane_sorted_behind_id,1)];
+        else
+            objects_in_next_lane_sorted_behind_id = flipud(objects_in_next_lane_sorted_behind_id);
+            objects_in_next_lane_sorted_behind = [0;...
+                                                 objects_in_next_lane_sorted(objects_in_next_lane_sorted_behind_id,1)];
+        end    
+    else
+        objects_in_next_lane_sorted_behind = objects_in_next_lane_sorted(1,1); 
+    end
 else
-    obj_closest_in_next_path_ID = 0;
+    objects_in_next_lane_sorted_behind = zeros(1,0);
 end
+
 %Sort objects in ego and next lane in driving direction and in the proximity sequence of ego vehicle.
 
 

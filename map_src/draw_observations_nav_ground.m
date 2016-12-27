@@ -4,7 +4,7 @@ function draw_observations_nav_ground (innerLine_coordinate, innerLine_Vertex_in
                                 outerLine_coordinate, outerLine_Vertex_index,...
                                 landmarks, landmarks_in_proximity_id_in_front,...
                                 landmarks_in_proximity_id_in_rear, vehicle_state, object_list, ...
-                                object_of_interest_id, sensor_data_raw, ...
+                                 CIPO_id_lcs, CIPO_id_next_lcs, sensor_data_raw, ...
                                 patac_navi, configuration)
 %-------------------------------------------------------
 % University of Zaragoza
@@ -52,7 +52,7 @@ if configuration.step_by_step
     configuration.ground = configuration.observations;
      
     %draw observations
-    draw_obs_nav_ground (object_list,sensor_data_raw,object_of_interest_id,configuration);
+    draw_obs_nav_ground (object_list,sensor_data_raw,CIPO_id_lcs, CIPO_id_next_lcs,configuration);
     
 %     for p = 1:observations.m,
 %         if configuration.ellipses

@@ -1,5 +1,5 @@
 
-function draw_obs_nav_ground (object_list, sensor_data_raw,object_of_interest_id, configuration)
+function draw_obs_nav_ground (object_list, sensor_data_raw,CIPO_id_lcs, CIPO_id_next_lcs, configuration)
 %-------------------------------------------------------
 % University of Zaragoza
 % Centro Politecnico Superior
@@ -23,10 +23,13 @@ x = sensor_data_raw(valid_srr,2);%observations.z(1:2:end);
 y = sensor_data_raw(valid_srr,3);%observations.z(2:2:end);
 plot(x, y, ['b' 'x']);
 
-if(abs(object_of_interest_id)>0.5)
-	x = object_list(object_of_interest_id,2);%observations.z(1:2:end);
-	y = object_list(object_of_interest_id,4);%observations.z(2:2:end);
-	plot(x, y, 'rd','MarkerSize',10); 
+if(CIPO_id_lcs(1,1)~=0)
+    object_of_interest_id = CIPO_id_lcs(1,1);
+    if(abs(object_of_interest_id)>0.5)
+    	x = object_list(object_of_interest_id,2);%observations.z(1:2:end);
+    	y = object_list(object_of_interest_id,4);%observations.z(2:2:end);
+    	plot(x, y, 'rd','MarkerSize',10); 
+    end
 end
 
 for p = 1:length(valid_fuse)
