@@ -1,13 +1,13 @@
-function [distance,flag,nearestIndex]=calDistance(p,coordinate, Vertex_index,option)
-% ·µ»ØdistanceÊÇ´¹Ö±¾àÀë£¬flagÊÇ·½Ïò£¬1ÊÇÓÒ±ß£¬0ÊÇÖØºÏ£¬-1×ó×ó±ß
-% ÊäÈëpÊÇµ±Ç°³µÁ¾µÄ×ø±ê
-% ÊäÈëofflineDataÊÇÀëÏßÊı¾İµÄ½á¹¹Ìå£¬£¨coordinate£¬Vertex_index£©
-%        offlineData.coordinateÊÇµØÍ¼×ø±ê
-%        offlineData.Vertex_indexÊÇÃ¿¶ÎÊı¾İ¶ÔÓÚµÃ¶¥µã
-% option ÊÇ¸ö½á¹¹Ìå£¨firstTime,oldIndex,clockWise£©
-%        Èç¹û option.firstTime==1£¬Ôò²»ĞèÒªÌá¹©option.oldIndex
-%        Èç¹û option.firstTime==0£¬ÔòĞèÒªÌá¹©option.oldIndex
-%        option.clockWise=1ÊÇË³Ê±Õë;  =0ÊÇÄæÊ±Õë£¬
+ï»¿function [distance,flag,nearestIndex]=calDistance(p,coordinate, Vertex_index,option)
+% è¿”å›distanceæ˜¯å‚ç›´è·ç¦»ï¼Œflagæ˜¯æ–¹å‘ï¼Œ1æ˜¯å³è¾¹ï¼Œ0æ˜¯é‡åˆï¼Œ-1å·¦å·¦è¾¹
+% è¾“å…¥pæ˜¯å½“å‰è½¦è¾†çš„åæ ‡
+% è¾“å…¥offlineDataæ˜¯ç¦»çº¿æ•°æ®çš„ç»“æ„ä½“ï¼Œï¼ˆcoordinateï¼ŒVertex_indexï¼‰
+%        offlineData.coordinateæ˜¯åœ°å›¾åæ ‡
+%        offlineData.Vertex_indexæ˜¯æ¯æ®µæ•°æ®å¯¹äºå¾—é¡¶ç‚¹
+% option æ˜¯ä¸ªç»“æ„ä½“ï¼ˆfirstTime,oldIndex,clockWiseï¼‰
+%        å¦‚æœ option.firstTime==1ï¼Œåˆ™ä¸éœ€è¦æä¾›option.oldIndex
+%        å¦‚æœ option.firstTime==0ï¼Œåˆ™éœ€è¦æä¾›option.oldIndex
+%        option.clockWise=1æ˜¯é¡ºæ—¶é’ˆ;  =0æ˜¯é€†æ—¶é’ˆï¼Œ
 
 
 %%
@@ -17,7 +17,7 @@ flag = false;
 d_side = zeros(1,4);
 a = 0;
 nearestIndex = 0;
-for i=1:4                 %¼ÆËãµ±Ç°µãÔÚÀëÏßµØÍ¼µÄÄÄ¸ö±ßÉÏ  sideIndex
+for i=1:4                 %è®¡ç®—å½“å‰ç‚¹åœ¨ç¦»çº¿åœ°å›¾çš„å“ªä¸ªè¾¹ä¸Š  sideIndex
     A=coordinate(Vertex_index(i,1),:);
     B=coordinate(Vertex_index(i,2),:);
    [d_side(i),flag]=point2line(p,A,B);
@@ -27,7 +27,7 @@ end
 
 
 
-%%  Ê×´Î¼ÆËã
+%%  é¦–æ¬¡è®¡ç®—
 if option.firstTime==1
     d1 = zeros(1000,1);
 %     d = zeros((Vertex_index(sideIndex,2) - Vertex_index(sideIndex,1)),1);
@@ -37,7 +37,7 @@ if option.firstTime==1
     end
     len = Vertex_index(sideIndex,2) - Vertex_index(sideIndex,1);
     d = d1(1:len);
-    [a,nearestIndex]=min(d);  %¼ÆËãµãÔÚ±ßÉÏµÄ×î½üµÄµã
+    [a,nearestIndex]=min(d);  %è®¡ç®—ç‚¹åœ¨è¾¹ä¸Šçš„æœ€è¿‘çš„ç‚¹
     
     if nearestIndex==length(d);
         nearestIndex=nearestIndex-1;
@@ -47,7 +47,7 @@ if option.firstTime==1
     end
     
     if d(nearestIndex+1)<d(nearestIndex-1)        
-        if option.clockWise %Ë³Ê±Õë
+        if option.clockWise %é¡ºæ—¶é’ˆ
             
             B_index=nearestIndex+Vertex_index(sideIndex,1);
             A_index=B_index+1;
@@ -56,7 +56,7 @@ if option.firstTime==1
                 B_index=B_index-1;
             end
             
-        else              %ÄæÊ±Õë
+        else              %é€†æ—¶é’ˆ
             
             A_index=nearestIndex+Vertex_index(sideIndex,1);
             B_index=A_index+1;
@@ -68,14 +68,14 @@ if option.firstTime==1
         
     else
         
-        if option.clockWise %Ë³Ê±Õë
+        if option.clockWise %é¡ºæ—¶é’ˆ
             A_index=nearestIndex+Vertex_index(sideIndex,1);
             B_index=A_index-1;
             if B_index<Vertex_index(sideIndex,1)
                 A_index=A_index+1;
                 B_index=B_index+1;
             end
-        else          %ÄæÊ±Õë
+        else          %é€†æ—¶é’ˆ
             B_index=nearestIndex+Vertex_index(sideIndex,1);
             A_index=B_index-1;
             if A_index<Vertex_index(sideIndex,1)
@@ -91,13 +91,13 @@ end
     
 
 % else 
-% %%  ·ÇÊ×´Î¼ÆËã
+% %%  éé¦–æ¬¡è®¡ç®—
 % 
 % %     oldIndex=option.oldIndex;
 %     oldIndex = 0;
 %     temp = zeros(21,1);
 %     d = temp;
-%     if option.clockWise %%% ·ÇÊ×´Î + Ë³Ê±Õë
+%     if option.clockWise %%% éé¦–æ¬¡ + é¡ºæ—¶é’ˆ
 %         for i=-15:5;
 %             temp(i)=oldIndex+i;
 %             if temp(i)>size(coordinate,1)
@@ -137,7 +137,7 @@ end
 %         end       
 %       
 %         
-%     else   %% ·ÇÊ×´Î + ÄæÊ±Õë
+%     else   %% éé¦–æ¬¡ + é€†æ—¶é’ˆ
 %         
 %         
 %         for i=-5:15;

@@ -1,9 +1,9 @@
 %-------------------------------------------------------
-% University of Zaragoza
-% Centro Politecnico Superior
-% Robotics and Real Time Group
+% Patac
+% SHD
+% Software
 %-------------------------------------------------------
-% Authors:  J. Neira, J. Tardos
+% Authors:  Binjian Xin
 % Date   :  7-2002
 %
 % calculates the inverse of one or more transformations

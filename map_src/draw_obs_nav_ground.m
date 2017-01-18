@@ -1,7 +1,7 @@
 
 function draw_obs_nav_ground (object_list, sensor_data_raw,CIPO_id_lcs, CIPO_id_next_lcs, configuration)
 %-------------------------------------------------------
-% University of Zaragoza
+% Patac
 % Centro Politecnico Superior
 % Robotics and Real Time Group
 % Authors:  J. Neira, J. Tardos

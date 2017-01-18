@@ -1,6 +1,6 @@
 function generate_arrow(initial_point, end_point, c)
 %-------------------------------------------------------
-% University of Zaragoza
+% Patac
 % Centro Politecnico Superior
 % Robotics and Real Time Group
 % Author :  P. Pinies

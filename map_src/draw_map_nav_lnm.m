@@ -5,7 +5,7 @@ function draw_map_nav_lnm (innerLine_coordinate, innerLine_Vertex_index,...
                                 outerLine_coordinate, outerLine_Vertex_index,...
                                 configuration)
 %-------------------------------------------------------
-% University of Zaragoza
+% Patac
 % Centro Politecnico Superior
 % Robotics and Real Time Group
 % Authors:  J. Neira, J. Tardos

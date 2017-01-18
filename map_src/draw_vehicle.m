@@ -1,7 +1,7 @@
 
 function draw_vehicle (loc, cov, color, configuration)
 %-------------------------------------------------------
-% University of Zaragoza
+% Patac
 % Centro Politecnico Superior
 % Robotics and Real Time Group
 % Authors:  J. Neira, J. Tardos

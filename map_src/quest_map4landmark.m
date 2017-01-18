@@ -1,7 +1,7 @@
 function [landmarks_in_proximity_id_in_front, landmarks_in_proximity_id_in_rear] = quest_map4landmark (x_in_lcs, y_in_lcs, landmarks, middleLine_coordinate, middleLine_Vertex_index,...
 	configuration,option)
 %-------------------------------------------------------
-% University of Zaragoza
+% Patac
 % Centro Politecnico Superior
 % Robotics and Real Time Group
 % Authors:  J. Neira, J. Tardos

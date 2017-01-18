@@ -7,7 +7,7 @@ function draw_observations_nav_ground (innerLine_coordinate, innerLine_Vertex_in
                                  CIPO_id_lcs, CIPO_id_next_lcs, sensor_data_raw, ...
                                 patac_navi, configuration)
 %-------------------------------------------------------
-% University of Zaragoza
+% Patac
 % Centro Politecnico Superior
 % Robotics and Real Time Group
 % Authors:  J. Neira, J. Tardos
