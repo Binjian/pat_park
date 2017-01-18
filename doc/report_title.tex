@@ -129,7 +129,7 @@
 % \author{\li{\zhiv{忻斌健}}}
 \title{\hei 地图模块}
 \author{\hei 忻斌健}
-\date{2017/01/09}             %本文中手动添加时间
+\date{2017年01月09日}             %本文中手动添加时间
 
 \begin{document}
 \begin{titlepage}
@@ -149,7 +149,7 @@
 	\vfill
 
 % Bottom of the page
-	{\large \today\par}
+	{\large 2017年01月09日 \par}
 
 
 \end{titlepage}
@@ -222,14 +222,155 @@ p(m|x_{1:t},z_{1:t})=\prod_{l=1}^L p(m_l|x_{1:t},z_{1:t})
 \end{figure}
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%以上为论文正文第二部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%以下为论文正文第三部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{\textbf{\song{\zhiv 追踪列表（动态）}}}
+
+\begin{minted}[linenos]{c}
+int main() {
+printf("hello, world");
+return 0;
+}
+\end{minted}
+
+\begin{minted}[linenos]{c}
+typedef struct{
+int id;
+// set to 1 in the very first cycle onl that an object is output, 0 in all other cycles.
+bool newObj;
+//one of GCS (WGS84/UTM), LCS,  CCS, VCS, SCS, ACS, ENUM tbd
+int coordinate_system;
+PatObjState objState;
+PatObjSize objSize;
+// Pedestrian/vehicle_car/vehicle_truck/unknown/... ---> ENUM tbd.
+int objClass;
+//1 if the object is moving;0 if it's still;
+bool moving;
+//tracking when the object is seen by which exteroceptive sensor;
+PatTime lastSeenBySensor[NUM_SENSOR_EXTEROCEPTIVE];
+//0 for invalid; 1 for valid;
+float existenceProbability;
+}PatObject;
+
+//maximally 256 tracked objects by all sensors around the vehicle;
+PatObject object_list[128];
+\end{minted}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%以上为论文正文第三部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%以下为论文正文第四部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\section{\textbf{\song{\zhiv SLAM（同时定位与生成地图）}}}}
+本车姿态（车辆位置，航向）和被观测目标的位置相关（地图,此处只考虑静态的地标），应该同时求解。
+当特征（地标）较少，使用基于EKF的SLAM.
+(fastSLAM/DP-SLAM适用于其他场合)
+
+{\subsection{\textbf{\song\zhiv{运动模型}}}}
+
+
+\begin{eqnarray}
+x_{k+1} &=& x_k+D_k\cdot \cos\theta_{k+1} \\
+y_{k+1} &=& y_k+D_k\cdot \sin\theta_{k+1}  \\
+\theta_{k+1} &=& \theta_{k}+\Delta\theta_{k}\\
+D_k  &=& v_{t,k}\cdot T\\
+\Delta\theta_k  &=& \omega_{k}\cdot T\\
+v_{t,k} &=& \frac{v_{L,k}+v_{R,k} }{2} = \frac{\omega_{L,k}R+\omega_{R,k}R}{2} \\
+\omega_{k} &=& \frac{v_{R,k}+v_{L,k} }{b} = \frac{\omega_{R,k}R-\omega_{L,k}R}{b}
+\end{eqnarray}
+  
+标定
+\begin{eqnarray}
+v_{t,k} &=& \frac{k_1\cdot v_{L,k}+k_2\cdot v_{R,k}}{2}\\
+\omega_{k} &=& \frac{k_2\cdot v_{R,k}-k_1\cdot v_{L,k}}{k_3\cdot b}
+\end{eqnarray}
+  
+$u_k=(v_k,\omega_k)^T$
+
+预测
+
+\begin{eqnarray}
+x_{k+1} &=& f(x_k,u_k,v_k)\\
+f(x_k,u_k,v_k) &=& \left\{ \begin{array}{l} 
+               x_k+(D_k+v_{1,k}\cdot\cos(\theta_k+\Delta\theta_k+v_{2,k}) \\
+               y_k+(D_k+v_{1,k}\cdot\sin(\theta_k+\Delta\theta_k+v_{2,k}) \\
+               \theta_k+\Delta\theta_k+v_{2,k}
+               \end{array}
+               \right.
+\end{eqnarray}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[height=200pt]{motion_model.jpg}
+\end{figure}
+{\subsection{\textbf{\song\zhiv{观测模型}}}}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[height=200pt]{observation_model.jpg}
+\end{figure}
+基于距离变换 $DT$
+\[
+    DT(\textbf{x}) = \min_{v_j\in V}|\textbf{x}-\textbf{v}_j|
+\]
+Chamfer distance $CD$
+\[
+    h(\textbf{X},\textbf{z}) = \frac{1}{n}\sum_{i=0}^{n-1}DT(X_{O_i})=CD
+\]
+
+\[
+    \textbf{X}_{O_i}=\begin{cases} x_{O_i} \\ y_{O_i} \end{cases} = 
+    \begin{cases} 
+    x_{k|k-1}+r_i\cos(\theta_i+\phi_{k|k-1})\\ 
+    y_{k|k-1}+r_i\sin(\theta_i+\phi_{k|k-1}) 
+    \end{cases}
+\]
+
+隐式观测模型
+\[
+    h(\textbf{X},\textbf{z})
+\]
+
+{\subsection{\textbf{\song\zhiv{更新}}}}
+\begin{eqnarray}
+K &=& P_{k|k-1} \nabla h_\textbf{X}^T (\nabla h_\textbf{X} P_{k|k-1}\nabla h_\textbf{X}^T+\nabla h_\textbf{z}^T \Sigma_\textbf{z} \nabla h_\textbf{z} )^{-1}\\
+X_{k|k} &=& X_{k|k-1}+K(-h(\textbf(X)_{k|k-1},\textbf{z})) \\
+P_{k|k} &=& (I-K\nabla h_\textbf{X})P_{k|k-1}
+\end{eqnarray}
+{\subsection{\textbf{\song\zhiv{参考坐标系}}}}
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[height=150pt]{coordinate_system.jpg}
+\end{figure}
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[height=150pt]{vcs.jpg}
+\end{figure}
+
+
+\section{\textbf{\song{\zhiv 附录}}}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[height=125pt]{model_main.jpg}
+\end{figure}
+
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[height=300pt]{model_mapping.jpg}
+\end{figure}
+
+
+{\subsection{\textbf{\song\zhiv{主控模型 m函数}}}}
+
 \begin{minted}[mathescape,
-               linenos,
-               numbersep=5pt,
-               gobble=2,
-               frame=lines,
-               framesep=2mm]{matlab}
+               linenos]{matlab}
 function [veh_pose, veh_vel] = slam_ekf_patac (innerLine, middleLine, outerLine,...
-				   landmarks, ...
+                   landmarks, ...
                    odo_motion_x, odo_motion_y, odo_motion_yaw, ...
                    rtk_gps_lat, rtk_gps_lon, rtk_gps_yaw, rtk_gps_ts,...
                    sensor_data_raw,...
@@ -379,88 +520,517 @@ veh_pose = map.x(1:3);
 \end{minted}
 
 
-以下给出六种典型的数列空间和函数空间的定义，文字叙述和符号表示依照文献\cite{1}.\\
+{\subsection{\textbf{\song\zhiv{目标定位模块 m函数}}}}
 
+\begin{minted}[mathescape,
+               linenos]{matlab}
+function object_list_update = object_localization(object_list, object_num,...
+    innerLine_coordinate, innerLine_Vertex_index, ...
+    middleLine_coordinate, middleLine_Vertex_index,...
+    outerLine_coordinate, outerLine_Vertex_index,lane_offset,...
+     option)
 
+object_list_update  = object_list;
+% distance          = zeros(size(object_list,1),3);
+side_direction      = zeros(size(object_list,1),3);
+% nearestIndex      = zeros(size(object_list,1),3);
 
+for  i = 1:object_num
+    if(object_list(i,1)~=0)
+        p = [object_list(i,2),object_list(i,4)];%2nd and 4th colomn are range x and range y
+        side_direction(i,1) = point_inside_lane(p,innerLine_coordinate, innerLine_Vertex_index);
+        side_direction(i,2) = point_inside_lane(p,middleLine_coordinate,middleLine_Vertex_index);
+%         side_direction(i,3) = point_inside_lane(p,outerLine_coordinate, outerLine_Vertex_index);
+        side_direction(i,3) = point_inside_lane_offset(p,outerLine_coordinate, outerLine_Vertex_index,lane_offset);       
+    end
+end
 
-\begin{definition}[空间~$l^p$   $(p\geq 1)$]               %%%%%%%%%%%%%%定义 1%%%%%%%%%%%
-一切满足
-~$(\sum\limits^{\infty}_{i=1}|\xi_i|^p)^{1/p}<+\infty$~    %注意命令 \limits
-的数列~$x=(\xi_1,\xi_2,\cdots)$~的全体记为~$l^p$.\ 容易验证
-$${\parallel x\parallel}_{p}=(\sum^{\infty}_{i=1}|\xi_i|^p)^{1/p}<+\infty$$ 是~$l^p$~上的范数.
-\end{definition}
-$\cdots$
-%%%%%%%%%%%%%%%%%%%%%%%%以上为论文正文第二部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+for i = 1:object_num
+    if(object_list(i,1)~=0)
+        if(option.clockWise == 0)%counter-clockwise
+            switch(sum(side_direction(i,:)))
+                case  3  %( 1  1  1) outside outer ring
+                    object_list_update(i,9) = 3; 
+                case  1  %( 1  1 -1)
+                    object_list_update(i,9) = 2; %outer lane 
+                case -1  %( 1 -1 -1)
+                    object_list_update(i,9) = 1; %inner lane
+                case -3  %(-1 -1 -1)
+                    object_list_update(i,9) = 0; %inside inner ring
+                otherwise
+                    object_list_update(i,9) = 5;%warning('Unexpected location!')
+            end
+        else%clockwise
+            switch(sum(side_direction(i,:)))%couterclockwise
+                case -3 %( -1  -1  -1)
+                    object_list_update(i,9) = 3; 
+                case -1 %( -1  -1   1)
+                    object_list_update(i,9) = 2; %outer lane 
+                case  1   %( -1   1   1)
+                    object_list_update(i,9) = 1; %inner lane
+                case  3   %(  1   1   1)
+                    object_list_update(i,9) = 0; %inside inner ring
+                otherwise
+                    object_list_update(i,9) = 5;%warning('Unexpected location!')
+            end
+        end
+    end
+end
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%以下为论文正文第三部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{\textbf{\song{\zhiv 追踪列表（动态）}}}
-
-\begin{minted}[linenos]{c}
-int main() {
-printf("hello, world");
-return 0;
-}
 \end{minted}
 
-\begin{minted}[linenos]{c}
-typedef struct{
-int id;
-// set to 1 in the very first cycle onl that an object is output, 0 in all other cycles.
-bool newObj;
-//one of GCS (WGS84/UTM), LCS,  CCS, VCS, SCS, ACS, ENUM tbd
-int coordinate_system;
-PatObjState objState;
-PatObjSize objSize;
-// Pedestrian/vehicle_car/vehicle_truck/unknown/... ---> ENUM tbd.
-int objClass;
-//1 if the object is moving;0 if it's still;
-bool moving;
-//tracking when the object is seen by which exteroceptive sensor;
-PatTime lastSeenBySensor[NUM_SENSOR_EXTEROCEPTIVE];
-//0 for invalid; 1 for valid;
-float existenceProbability;
-}PatObject;
+{\subsection{\textbf{\song\zhiv{地标搜索模块 m函数}}}}
 
-//maximally 256 tracked objects by all sensors around the vehicle;
-PatObject object_list[128];
+\begin{minted}[mathescape,
+               linenos]{matlab}
+function [landmarks_in_proximity_id_in_front, landmarks_in_proximity_id_in_rear] = quest_map4landmark (x_in_lcs, y_in_lcs, landmarks, middleLine_coordinate, middleLine_Vertex_index,...
+    configuration,option)
+
+% landmarks_in_proximity = zeros(size(landmarks));
+%Landmarks
+x1 = (double(landmarks(:,1))+double(landmarks(:,3)))/2 - ones(size(landmarks,1),1)*x_in_lcs;%landmarks column vector
+y1 = (double(landmarks(:,2))+double(landmarks(:,4)))/2 - ones(size(landmarks,1),1)*y_in_lcs;
+% visible = find( (abs(x1) <= roi.x) & (abs(y1) <= roi.y) );
+% distance2ego = (x1.^2 + y1.^2);
+% [min_dist, ind] = min(distance2ego);
+visible = find( (x1.^2 + y1.^2) <= configuration.proximity*configuration.proximity);
+
+
+
+%%%%%%%%%%%%%%%%%%%%
+
+if(size(visible,1)~=0)
+    p = [x_in_lcs,y_in_lcs];
+    [~,~,nearestIndex_Ego] = calDistance(p,middleLine_coordinate,middleLine_Vertex_index,option);
+
+    landmarks_in_proximity = landmarks(visible,:);
+    lat_distance_ldm        = zeros(size(visible,1),1);
+    side_direction_ldm      = zeros(size(visible,1),1);
+    nearestIndex_ldm        = zeros(size(visible,1),1);
+
+    %Initialize search
+%     p = (landmarks_in_proximity(1,1:2)+ landmarks_in_proximity(1,3:4))/2; %
+%     [lat_distance_ldm(1),side_direction_ldm(1),nearestIndex_ldm(1)] = calDistance(p,middleLine_coordinate,middleLine_Vertex_index,option);
+%     ldm_closest_in_path_ID_Index = nearestIndex_ldm(1);
+    ldm_closest_in_path_ID = -1;
+    ldm_closest_in_path_ID_Index = nearestIndex_Ego;
+
+    %Find the closest landmark in front
+    for  i = 1:size(visible,1)
+        p = (landmarks_in_proximity(i,1:2)+ landmarks_in_proximity(i,3:4))/2; %
+        [lat_distance_ldm(i),side_direction_ldm(i),nearestIndex_ldm(i)]=calDistance(p,middleLine_coordinate,middleLine_Vertex_index,option); % projection onto the middleLine
+        if(option.clockWise == 0) %counter-clockwise
+            if (nearestIndex_ldm(i) >= nearestIndex_Ego && ...%middleLine Index-->(2);in front of the ego car;
+                    (nearestIndex_ldm(i) < ldm_closest_in_path_ID_Index...
+                     || ldm_closest_in_path_ID <0 )...
+                )%nearer than the closest so far
+                ldm_closest_in_path_ID = i;
+                ldm_closest_in_path_ID_Index = nearestIndex_ldm(i);
+            end
+        else %clockwise
+            if (nearestIndex_ldm(i) <= nearestIndex_Ego && ...%middleLine Index-->(2);in front of the ego car; clockwise is smaller Index --> "<"
+                    (nearestIndex_ldm(i) > ldm_closest_in_path_ID_Index...
+                     || ldm_closest_in_path_ID <0)...
+                )%nearer than the closest so far, clockwise is greater Index --> ">"
+                ldm_closest_in_path_ID = i;
+                ldm_closest_in_path_ID_Index = nearestIndex_ldm(i);
+            end
+        end
+    end
+
+    landmarks_in_proximity_id_in_front = zeros(size(landmarks,1),1);
+    landmarks_in_proximity_id_in_rear  = zeros(size(landmarks,1),1); 
+    if(ldm_closest_in_path_ID<0)%no front landmarks all are behind the ego vehicle.
+        if(option.clockWise == 0) %counter-clockwise
+            landmarks_in_proximity_id_in_rear(1:size(visible,1)) = flipud(visible);
+        else%clockwise
+            landmarks_in_proximity_id_in_rear(1:size(visible,1)) = visible;
+        end 
+    elseif(abs(ldm_closest_in_path_ID-1)<1e-3)
+        if(option.clockWise == 0) % counter-clockwise
+            if(middleLine_Vertex_index(1,1)<nearestIndex_Ego && nearestIndex_Ego<middleLine_Vertex_index(1,2))%beginning
+                ldm_ID = visible(ldm_closest_in_path_ID);
+                if(nearestIndex_Ego>2)
+                    front_cyclic_1 = find(visible<=79);
+                    front_cyclic_2 = find(visible>=ldm_ID);
+                    if(isempty(front_cyclic_1))
+                        front_cyclic_1=zeros(0,1);
+                    end
+                    if(isempty(front_cyclic_2))
+                        front_cyclic_2=zeros(0,1);
+                    end
+                    front_cyclic = intersect(front_cyclic_1,front_cyclic_2);
+                    rear_cyclic_1 = find(visible>79);
+                    rear_cyclic_2 = find(visible<ldm_ID);
+                    rear_size_1 = size(rear_cyclic_1,1);
+                    rear_size_2 = size(rear_cyclic_2,1);
+%                     rear_cyclic = union(rear_cyclic_1,rear_cyclic_2);
+                    front_size = size(front_cyclic,1);
+%                     rear_size  =  size(rear_cyclic,1);
+                    if(front_size~=0)                                   
+                        landmarks_in_proximity_id_in_front(1:front_size) = visible(front_cyclic);
+                    end
+                    if(rear_size_2~=0)
+                        landmarks_in_proximity_id_in_rear(1:rear_size_2)= flipud(visible(rear_cyclic_2));
+                    end
+                    if(rear_size_1~=0)
+                        landmarks_in_proximity_id_in_rear(rear_size_2+1:rear_size_2+rear_size_1)= flipud(visible(rear_cyclic_1));
+                    end
+                else %if(nearestIndex_Ego==2
+                    front_cyclic_1 = find(visible<=79);
+                    front_cyclic_2_1 = find(nearestIndex_ldm==2);
+                    front_cyclic_2_2 = find(visible>79);
+                    if(isempty(front_cyclic_2_1))
+                        front_cyclic_2_1=zeros(0,1);
+                    end
+                    if(isempty(front_cyclic_2_2))
+                        front_cyclic_2_2=zeros(0,1);
+                    end
+                    front_cyclic_2 = intersect(front_cyclic_2_1,front_cyclic_2_2);
+                    front_size_1 = size(front_cyclic_1,1);
+                    front_size_2 = size(front_cyclic_2,1);
+%                     front_cyclic = union(front_cyclic_1,front_cyclic_2);
+%                 front_size = size(front_cyclic,1);
+                    rear_cyclic_1 = find(visible>79);
+                    rear_cyclic_2 = find(nearestIndex_ldm~=2);
+                    if(isempty(rear_cyclic_1))
+                        rear_cyclic_1=zeros(0,1);
+                    end
+                    if(isempty(rear_cyclic_2))
+                        rear_cyclic_2=zeros(0,1);
+                    end                   
+                    rear_cyclic = intersect(rear_cyclic_1,rear_cyclic_2);
+                    rear_size  =  size(rear_cyclic,1);
+%                     front_cyclic = find(visible<=79 || visible>=ldm_ID);
+%                      rear_cyclic = find( visible>79 && visible<ldm_ID);
+%                     front_size = size(front_cyclic,1);
+%                     rear_size  =  size(rear_cyclic,1);
+                    if(front_size_2~=0)
+                        landmarks_in_proximity_id_in_front(1:front_size_2) = visible(front_cyclic_2);
+                    end
+                    if(front_size_1~=0)
+                        landmarks_in_proximity_id_in_front(front_size_2+1:front_size_2+front_size_1) = visible(front_cyclic_1);
+                    end
+                    if(rear_size~=0)
+                        landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));
+                    end
+               end
+            elseif(middleLine_Vertex_index(4,1)<nearestIndex_Ego && nearestIndex_Ego<middleLine_Vertex_index(4,2))%end
+                ldm_ID = visible(ldm_closest_in_path_ID);
+                front_cyclic_1 = find(visible <= 21);
+                front_cyclic_2 = find(visible>=ldm_ID);
+%                 front_cyclic = union(front_cyclic_1,front_cyclic_2);
+                rear_cyclic_1 = find(visible > 21);
+                rear_cyclic_2 = find(visible < ldm_ID);
+                if(isempty(rear_cyclic_1))
+                    rear_cyclic_1=zeros(0,1);
+                end
+                if(isempty(rear_cyclic_2))
+                    rear_cyclic_2=zeros(0,1);
+                end
+                rear_cyclic = intersect(rear_cyclic_1,rear_cyclic_2);
+%                 front_size = size(front_cyclic,1);
+                rear_size  =  size(rear_cyclic,1);
+              
+                front_size_1 = size(front_cyclic_1,1);
+                front_size_2 = size(front_cyclic_2,1);
+%                 rear_size_1  =  size(rear_cyclic_1,1);
+%                 rear_size_2  =  size(rear_cyclic_2,1);
+                if(front_size_2~=0)
+                    landmarks_in_proximity_id_in_front(1:front_size_2) = visible(front_cyclic_2);
+                end
+                if(front_size_1~=0)
+                    landmarks_in_proximity_id_in_front(front_size_2+1:(front_size_1+front_size_2)) = visible(front_cyclic_1);
+                end
+                if(rear_size~=0)
+                    landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));               
+                end
+            else
+                landmarks_in_proximity_id_in_front(1:size(visible,1)) = visible;
+            end
+        end
+    else% (ldm_closest_in_path_ID>1)
+        if(option.clockWise == 0) % counter-clockwise
+            if(middleLine_Vertex_index(1,1)<nearestIndex_Ego && nearestIndex_Ego<middleLine_Vertex_index(1,2))%beginning
+                ldm_ID = visible(ldm_closest_in_path_ID);
+                if(nearestIndex_Ego>2)
+                    front_cyclic_1 = find(visible<=79);
+                    front_cyclic_2 = find(visible>=ldm_ID);
+                    if(isempty(front_cyclic_1))
+                        front_cyclic_1=zeros(0,1);
+                    end
+                    if(isempty(front_cyclic_2))
+                        front_cyclic_2=zeros(0,1);
+                    end                    
+                    front_cyclic = intersect(front_cyclic_1,front_cyclic_2);
+                    rear_cyclic_1 = find(visible>79);
+                    rear_cyclic_2 = find(visible<ldm_ID);
+                    rear_size_1 = size(rear_cyclic_1,1);
+                    rear_size_2 = size(rear_cyclic_2,1);
+%                     rear_cyclic = union(rear_cyclic_1,rear_cyclic_2);
+                    front_size = size(front_cyclic,1);
+%                     rear_size  =  size(rear_cyclic,1);
+                    if(front_size~=0)
+                        landmarks_in_proximity_id_in_front(1:front_size) = visible(front_cyclic);
+                    end
+                    if(rear_size_2~=0)
+                        landmarks_in_proximity_id_in_rear(1:rear_size_2)= flipud(visible(rear_cyclic_2));
+                    end
+                    if(rear_size_1~=0)
+                        landmarks_in_proximity_id_in_rear(rear_size_2+1:rear_size_2+rear_size_1)= flipud(visible(rear_cyclic_1));
+                    end
+                else %if(nearestIndex_Ego
+                    front_cyclic_1 = find(visible<=79);
+                    front_cyclic_2_1 = find(nearestIndex_ldm==2);
+                    front_cyclic_2_2 = find(visible>79);
+                    if(isempty(front_cyclic_2_1))
+                        front_cyclic_2_1=zeros(0,1);
+                    end
+                    if(isempty(front_cyclic_2_2))
+                        front_cyclic_2_2=zeros(0,1);
+                    end              
+                    front_cyclic_2 = intersect(front_cyclic_2_1,front_cyclic_2_2);
+                    front_size_1 = size(front_cyclic_1,1);
+                    front_size_2 = size(front_cyclic_2,1);
+                    rear_cyclic_1 = find(visible>79);
+                    rear_cyclic_2 = find(nearestIndex_ldm~=2);
+                    if(isempty(rear_cyclic_1))
+                        rear_cyclic_1=zeros(0,1);
+                    end
+                    if(isempty(rear_cyclic_2))
+                        rear_cyclic_2=zeros(0,1);
+                    end              
+                    rear_cyclic = intersect(rear_cyclic_1,rear_cyclic_2);
+                    rear_size  =  size(rear_cyclic,1);
+
+                    if(front_size_2~=0)
+                        landmarks_in_proximity_id_in_front(1:front_size_2) = visible(front_cyclic_2);
+                    end
+                    if(front_size_1~=0)
+                        landmarks_in_proximity_id_in_front(front_size_2+1:front_size_2+front_size_1) = visible(front_cyclic_1);
+                    end
+                    if(rear_size~=0)
+                        landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));
+                    end
+               end
+            elseif(middleLine_Vertex_index(4,1)<nearestIndex_Ego && nearestIndex_Ego<middleLine_Vertex_index(4,2))%end
+                ldm_ID = visible(ldm_closest_in_path_ID);
+                front_cyclic_1 = find(visible <= 21);
+                front_cyclic_2 = find(visible>=ldm_ID);
+                rear_cyclic_1 = find(visible > 21);
+                rear_cyclic_2 = find(visible < ldm_ID);
+                if(isempty(rear_cyclic_1))
+                    rear_cyclic_1=zeros(0,1);
+                end
+                if(isempty(rear_cyclic_2))
+                    rear_cyclic_2=zeros(0,1);
+                end                  
+                rear_cyclic = intersect(rear_cyclic_1,rear_cyclic_2);
+                rear_size  =  size(rear_cyclic,1);
+              
+                front_size_1 = size(front_cyclic_1,1);
+                front_size_2 = size(front_cyclic_2,1);
+                if(front_size_2~=0)
+                    landmarks_in_proximity_id_in_front(1:front_size_2) = visible(front_cyclic_2);
+                end
+                if(front_size_1~=0)
+                    landmarks_in_proximity_id_in_front(front_size_2+1:(front_size_1+front_size_2)) = visible(front_cyclic_1);
+                end
+                if(rear_size~=0)
+                    landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(rear_cyclic));           
+                end    
+            else
+                front_size = size(visible,1) - ldm_closest_in_path_ID+1;
+                rear_size = ldm_closest_in_path_ID-1;
+                landmarks_in_proximity_id_in_front(1:front_size) = visible(ldm_closest_in_path_ID:end);
+                landmarks_in_proximity_id_in_rear(1:rear_size)= flipud(visible(1:ldm_closest_in_path_ID-1));
+            end
+        else%clockwise
+            front_size = ldm_closest_in_path_ID;
+            rear_size = size(visible,1) - ldm_closest_in_path_ID;
+            landmarks_in_proximity_id_in_front(1:front_size) = flipud(visible(1:ldm_closest_in_path_ID));
+            landmarks_in_proximity_id_in_rear(1:rear_size)= visible(ldm_closest_in_path_ID+1:end);
+        end
+    end
+else
+    landmarks_in_proximity_id_in_front = zeros(size(landmarks,1),1);
+    landmarks_in_proximity_id_in_rear  = zeros(size(landmarks,1),1); 
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{minted}
+{\subsection{\textbf{\song\zhiv{目标定位模块 m函数}}}}
+
+\begin{minted}[mathescape,
+               linenos]{matlab}
+function object_list_update = object_localization(object_list, object_num,...
+    innerLine_coordinate, innerLine_Vertex_index, ...
+    middleLine_coordinate, middleLine_Vertex_index,...
+    outerLine_coordinate, outerLine_Vertex_index,lane_offset,...
+     option)
+
+object_list_update  = object_list;
+side_direction      = zeros(size(object_list,1),3);
+
+for  i = 1:object_num
+    if(object_list(i,1)~=0)
+        p = [object_list(i,2),object_list(i,4)];%2nd and 4th colomn are range x and range y
+        side_direction(i,1) = point_inside_lane(p,innerLine_coordinate, innerLine_Vertex_index);
+        side_direction(i,2) = point_inside_lane(p,middleLine_coordinate,middleLine_Vertex_index);
+        side_direction(i,3) = point_inside_lane_offset(p,outerLine_coordinate, outerLine_Vertex_index,lane_offset);       
+    end
+end
+
+for i = 1:object_num
+    if(object_list(i,1)~=0)
+        if(option.clockWise == 0)%counter-clockwise
+            switch(sum(side_direction(i,:)))
+                case  3  %( 1  1  1) outside outer ring
+                    object_list_update(i,9) = 3; 
+                case  1  %( 1  1 -1)
+                    object_list_update(i,9) = 2; %outer lane 
+                case -1  %( 1 -1 -1)
+                    object_list_update(i,9) = 1; %inner lane
+                case -3  %(-1 -1 -1)
+                    object_list_update(i,9) = 0; %inside inner ring
+                otherwise
+                    object_list_update(i,9) = 5;%warning('Unexpected location!')
+            end
+        else%clockwise
+            switch(sum(side_direction(i,:)))%couterclockwise
+                case -3 %( -1  -1  -1)
+                    object_list_update(i,9) = 3; 
+                case -1 %( -1  -1   1)
+                    object_list_update(i,9) = 2; %outer lane 
+                case  1   %( -1   1   1)
+                    object_list_update(i,9) = 1; %inner lane
+                case  3   %(  1   1   1)
+                    object_list_update(i,9) = 0; %inside inner ring
+                otherwise
+                    object_list_update(i,9) = 5;%warning('Unexpected location!')
+            end
+        end
+    end
+end
+
 \end{minted}
 
-{\subsection{\textbf{\song{\zhiv{$l^p$和$L^p(\mathbf{E})$}}}}}
-$l^p$~和~$L^p(\mathbf{E})$~都可分.
-$\cdots$
-%%%%%%%%%%%%%%%%%%%%%%%%%%%以上为论文正文第三部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+{\subsection{\textbf{\song\zhiv{地标搜索模块 m函数}}}}
+
+\begin{minted}[mathescape,
+               linenos]{matlab}
+function [obj_closest_in_path_ID, obj_closest_in_next_path_ID, ego_location] = objects_of_interest_fast(object_list,object_num,...
+    x_in_lcs, y_in_lcs, ...
+    innerLine_coordinate, innerLine_Vertex_index, ...
+    middleLine_coordinate, middleLine_Vertex_index,...
+    outerLine_coordinate, outerLine_Vertex_index,...
+     option)
+
+inside      = zeros(1,3);
+p = [x_in_lcs,y_in_lcs];
+inside(1) = point_inside_lane(p,innerLine_coordinate, innerLine_Vertex_index);
+inside(2) = point_inside_lane(p,middleLine_coordinate, middleLine_Vertex_index);
+inside(3) = point_inside_lane(p,outerLine_coordinate, outerLine_Vertex_index);
+
+if(option.clockWise == 0)%counter-clockwise
+    switch(sum(inside))
+        case  3  %( 1  1  1) outside outer ring
+            ego_location = 3; 
+        case  1  %( 1  1 -1)
+            ego_location = 2; %outer lane 
+        case -1  %( 1 -1 -1)
+            ego_location = 1; %inner lane
+        case -3  %(-1 -1 -1)
+            ego_location = 0; %inside inner ring
+        otherwise
+            ego_location = 5;%warning('Unexpected location!')
+    end
+else%clockwise
+    switch(sum(inside))%couterclockwise
+        case -3 %( -1  -1  -1)
+            ego_location = 3; 
+        case -1 %( -1  -1   1)
+            ego_location = 2; %outer lane 
+        case  1 %( -1   1   1)
+            ego_location = 1; %inner lane
+        case  3 %(  1   1   1)
+            ego_location = 0; %inside inner ring
+        otherwise
+            ego_location = 5;%warning('Unexpected location!')
+    end
+end
+
+if( ~(ego_location==2 || ego_location==1) ) 
+    obj_closest_in_path_ID = 0;
+    obj_closest_in_next_path_ID = 0;
+    return;
+end
+if(ego_location == 1)
+    next_lane = 2;
+else
+    next_lane = 1;
+end  
 
 
+[projection_dist,~]=point_dist2lane(p,outerLine_coordinate,outerLine_Vertex_index);
+[~,sideIndex]=min(projection_dist);
+
+%find the projected point of vehicle on the outer lane mark and its distance to the 1st corner.
+corner_1=outerLine_coordinate(outerLine_Vertex_index(sideIndex,1),:);
+corner_2=outerLine_coordinate(outerLine_Vertex_index(sideIndex,2),:);
+[~, dist2StartCorner_veh] = point_projection2LNM(p, corner_1, corner_2);
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%以下为论文正文第四部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-{\section{\textbf{\song{\zhiv SLAM（同时定位与生成地图）}}}}
+%find object in ego lane and next lane
+object_list_lane_loc = object_list(1:object_num,9) ;
 
-{\subsection{\textbf{\song\zhiv{函数空间与函数空间、数列空间与数列空间之间的联系}}}}
+objects_in_ego_lane_id = find(object_list_lane_loc == ego_location);
+objects_in_next_lane_id = find( object_list_lane_loc == next_lane);
 
+% objects_in_ego_lane_id(1:size(objects_in_next_lane_id_temp,1))=objects_in_ego_lane_id_temp;
+max_len = max(size(objects_in_ego_lane_id,1),size(objects_in_next_lane_id,1));
+dist2StartCorner_obj      = zeros(max_len,2);
 
-$\cdots$
-{\subsection{\textbf{\song\zhiv{函数空间与数列空间的联系}}}}
+if(size(objects_in_ego_lane_id,1)~=0)
+    objects_in_ego_lane  =  [object_list(objects_in_ego_lane_id,2),object_list(objects_in_ego_lane_id,4)];
+    obj_closest_in_path_ID_dist = dist2StartCorner_veh+500;
+    obj_closest_in_path_ID = 0;
+    %Find the closest in-path object (CIPO)
+    for  i = 1:size(objects_in_ego_lane,1)
+        p = objects_in_ego_lane(i,:);
+        [~,dist2StartCorner_obj(i,1)]=point_projection2LNM(p, corner_1, corner_2); % projection onto the outerlane 
 
-\begin{lemma}[~Riesz-Fiesher~定理]                %%%%%%%%%%%%%%%%%%%%%% 引理 1 %%%%%%%%%%%%%%%%%%%%%%%%
-设~$\{e_n\}$~是~Hilbert~空间~$\mathbf{H}$~中一就范正交系，$(c_1,c_2,\cdots)\in l^2$，则存在唯一的~$x\in H$~使~$(x,e_n)=e_n,\quad n=1,2,\cdots$~并且~$(x,x)=\sum\limits_{n=1}^\infty|c_n|^2$.\\
-\end{lemma}
+        if (dist2StartCorner_obj(i,1) >= dist2StartCorner_veh && ...
+                dist2StartCorner_obj(i,1) <= obj_closest_in_path_ID_dist)
+            obj_closest_in_path_ID = objects_in_ego_lane_id(i);
+            obj_closest_in_path_ID_dist = dist2StartCorner_obj(i,1);
+        end
+    end
+else
+    obj_closest_in_path_ID = 0;
+end
 
+% obj_closest_in_next_path_ID =0;
+if(size(objects_in_next_lane_id,1)~=0)
+    objects_in_next_lane =  [object_list(objects_in_next_lane_id,2),object_list(objects_in_next_lane_id,4)];
+    obj_closest_in_path_ID_dist = dist2StartCorner_veh+500;
+    obj_closest_in_next_path_ID = 0;
 
-文献\cite{4}给出了~$1\leq p\leq 2$~时的~$L^p(\mathbf{E})$~上的~Fourier~变换的构造过程，并指出当
-~$p>2$~时在广义函数的意义下~$L^p(\mathbf{E})$~仍可导入~Fourier~变换.\ 问题在于~$p\neq 2$~时~Fourier
-~变换能否构成~$L^p(\mathbf{E})$~与~$l^p$~之间的保范同构.
+    %Find the closest Next Lane object
+    for  i = 1:size(objects_in_next_lane,1)
+        p = objects_in_next_lane(i,:);
+        [~, dist2StartCorner_obj(i,2)] = point_projection2LNM(p, corner_1, corner_2);
+        if (dist2StartCorner_obj(i,2) > dist2StartCorner_veh && ...
+                dist2StartCorner_obj(i,2) < obj_closest_in_path_ID_dist)
+            obj_closest_in_next_path_ID = objects_in_next_lane_id(i);
+            obj_closest_in_path_ID_dist = dist2StartCorner_obj(i,2);
+        end
+     end    
+else
+    obj_closest_in_next_path_ID = 0;
+end
+%Sort objects in ego and next lane in driving direction and in the proximity sequence of ego vehicle.
+\end{minted}
 
-
-\begin{property}\label{pro2}                  %%%%%%%%%%%%%%%%% 问题 2 %%%%%%%%%%%%%%%%%%%%%%%%
-完备距离空间~$S(\mathbf{E})$~与~$s$，Banach~空间~$M(\mathbf{E})$~与~$m$~之间是否有同构关系？更进一步，~Fourier~变换及其反演公式
-能否推广到完备距离空间~$S(\mathbf{E})$~与~$s$，Banach~空间~$M(\mathbf{E})$~ 与~$m$
-\end{property}
-%%%%%%%%%%%%%%%%%%%%%%%%%以上是论文正文的第四部分%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-}}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%以下是参考文献%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
