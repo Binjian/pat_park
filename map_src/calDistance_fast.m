@@ -1,3 +1,13 @@
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+%-------------------------------------------------------
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%
+% calculates the inverse of one or more transformations
+%-------------------------------------------------------
 function [distance,flag]=calDistance_fast(p,coordinate, Vertex_index,option)
 % 返回distance是垂直距离，flag是方向，1是右边，0是重合，-1左左边
 % 输入p是当前车辆的坐标

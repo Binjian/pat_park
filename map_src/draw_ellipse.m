@@ -1,13 +1,15 @@
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+%-------------------------------------------------------
+% \author:  Binjian Xin
+% \Date   :  2017-1
+%
+% \brief calculates the inverse of one or more transformations
+%-------------------------------------------------------
 
  function h = draw_ellipse(pos, cov, color)
-%-------------------------------------------------------
-% University of Zaragoza
-% Centro Politecnico Superior
-% Robotics and Real Time Group
-% Authors:  J. Neira, J. Tardos
-% Date   :  7-2004
-%-------------------------------------------------------
-%-------------------------------------------------------
 global chi2;
 coder.extrinsic('full');
 persistent CIRCLE

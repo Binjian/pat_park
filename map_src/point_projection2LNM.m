@@ -1,3 +1,10 @@
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 function  [projected_point_veh, dist2StartCorner] =point_projection2LNM(p, corner_1, corner_2)
 % return flag -1 for inside; 1 for outside 
 x0 = p(1);

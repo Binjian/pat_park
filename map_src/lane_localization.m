@@ -1,4 +1,9 @@
-function [distance,flag,nearestIndex]=calDistance(p,coordinate, Vertex_index,option)
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
 % 返回distance是垂直距离，flag是方向，1是右边，0是重合，-1左左边
 % 输入p是当前车辆的坐标
 % 输入offlineData是离线数据的结构体，（coordinate，Vertex_index）
@@ -8,6 +13,10 @@ function [distance,flag,nearestIndex]=calDistance(p,coordinate, Vertex_index,opt
 %        如果 option.firstTime==1，则不需要提供option.oldIndex
 %        如果 option.firstTime==0，则需要提供option.oldIndex
 %        option.clockWise=1是顺时针;  =0是逆时针，
+%-------------------------------------------------------
+%-------------------------------------------------------
+
+function [distance,flag,nearestIndex]=calDistance(p,coordinate, Vertex_index,option)
 
 
 %%

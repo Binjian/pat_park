@@ -1,12 +1,12 @@
-
-function draw_obs_nav_ground (object_list, sensor_data_raw,CIPO_id_lcs, CIPO_id_next_lcs, configuration)
 %-------------------------------------------------------
 % Patac
-% Centro Politecnico Superior
-% Robotics and Real Time Group
-% Authors:  J. Neira, J. Tardos
-% Date   :  7-2004
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
 %-------------------------------------------------------
+
+function draw_obs_nav_ground (object_list, sensor_data_raw,CIPO_id_lcs, CIPO_id_next_lcs, configuration)
 %-------------------------------------------------------
 %global configuration;
 

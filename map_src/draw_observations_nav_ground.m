@@ -1,3 +1,10 @@
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 
 function draw_observations_nav_ground (innerLine_coordinate, innerLine_Vertex_index,...
                                 middleLine_coordinate, middleLine_Vertex_index,...
@@ -6,13 +13,6 @@ function draw_observations_nav_ground (innerLine_coordinate, innerLine_Vertex_in
                                 landmarks_in_proximity_id_in_rear, vehicle_state, object_list, ...
                                  CIPO_id_lcs, CIPO_id_next_lcs, sensor_data_raw, ...
                                 patac_navi, configuration)
-%-------------------------------------------------------
-% Patac
-% Centro Politecnico Superior
-% Robotics and Real Time Group
-% Authors:  J. Neira, J. Tardos
-% Date   :  7-2004
-%-------------------------------------------------------
 %-------------------------------------------------------
 % global configuration;
 

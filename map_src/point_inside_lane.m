@@ -8,7 +8,7 @@ function  inside =point_inside_lane(p,coordinate, Vertex_index)
 % -1 inside +1 outside
 line_det = zeros(1,4);
 
-for i=1:4                 %计算当前点在离线地图的哪个边�? sideIndex
+for i=1:4                 %计算当前点在离线地图的哪个边? sideIndex
     P0=[p,1];
     A=[coordinate(Vertex_index(i,1),:),1];
     B=[coordinate(Vertex_index(i,2),:),1];

@@ -1,10 +1,9 @@
-function generate_arrow(initial_point, end_point, c)
 %-------------------------------------------------------
 % Patac
-% Centro Politecnico Superior
-% Robotics and Real Time Group
-% Author :  P. Pinies
-% Date   :  7-2004
+% SHD
+% Software
+% Author :  Binjian Xin
+% Date   :  2017-1
 %-------------------------------------------------------
 %   arrow(initial_point, end_point, c) where
 %   Input:
@@ -13,6 +12,7 @@ function generate_arrow(initial_point, end_point, c)
 %   -end_point: 2D vector
 %   -c: color
 %-------------------------------------------------------
+function generate_arrow(initial_point, end_point, c)
 
 x_dif=end_point(1)-initial_point(1);
 y_dif=end_point(2)-initial_point(2);

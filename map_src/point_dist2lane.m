@@ -1,3 +1,10 @@
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 function  [projection_dist, inside] =point_dist2lane(p,coordinate, Vertex_index)
 % return flag -1 for inside; 1 for outside 
 

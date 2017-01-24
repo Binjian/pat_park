@@ -4,7 +4,7 @@
 % Software
 %-------------------------------------------------------
 % Authors:  Binjian Xin
-% Date   :  7-2002
+% Date   :  2017-1
 %
 % calculates the inverse of one or more transformations
 %-------------------------------------------------------

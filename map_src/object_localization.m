@@ -3,6 +3,13 @@ function object_list_update = object_localization(object_list, object_num,...
 	middleLine_coordinate, middleLine_Vertex_index,...
 	outerLine_coordinate, outerLine_Vertex_index,lane_offset,...
 	 option)
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 
 object_list_update	= object_list;
 % distance 			= zeros(size(object_list,1),3);

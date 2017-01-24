@@ -24,27 +24,27 @@
 % rtk_gps: rtk_gps.[lat, lon, alt, yaw, pitch, roll, ts]
 % 
 %   enumeration
-%   XCrossing_Stop (11) % Ê®×ÖÂ·¿ÚÍ£Ö¹Ïß
-%   XCrossing_Start (12) % Ê®×ÖÂ·¿ÚÄ¿±ê³µµÀ½øÈëÏß
-%   TCrossing_Stop (21)%T×ÖÂ·¿ÚÍ£Ö¹Ïß
-%   TCrossing_Start (22)%T×ÖÂ·¿ÚÄ¿±ê³µµÀ½øÈëÏß
-%   ZCrossing (30)%ÈËĞĞºáµÀÏß
-%   Stop_1 (51)%±ßÏß1£¨ÑØ³µµÀºáÏò±ßÏß£©£¬°Ú¶É³µÍ£³µµã¡£Í£³µµã¿ÉÄÜÃ»ÓĞÊµ¼ÊµÄ±ê¼Ç£¬Çë°´¹À¼ÆµÄÍ£³µµãÑ¡È¡Î»ÖÃ£¬±ÈÈçÌí¼Ó2ºÅÂ¥ÃÅ¿ÚµÄÍ£³µµã
-%   Stop_2 (52)%±ßÏß2£¨ÑØ³µµÀºáÏò±ßÏß£©
-%   LeftTurn_Stop (61)% ×ó×ªLĞÎÂ·¿ÚÍ£Ö¹Ïß
-%   LeftTurn_Start (62)% ×ó×ªLĞÎÂ·¿Ú½øÈëÏß
-%   RightTurn_Stop (71)% ÓÒ×ªLĞÎÂ·¿ÚÍ£Ö¹Ïß
-%   RightTurn_Start (72)% ÓÒ×ªLĞÎÂ·¿Ú½øÈëÏß
-%   ParkSlotOnRoad_Stop (81)% Â·±ßÍ£³µÎ»±ßÏß1£¨ÑØ³µµÀºáÏò±ßÏß£©
-%   ParkSlotOnRoad_Start (82)% Â·±ßÍ£³µÎ»±ßÏß2£¨ÑØ³µµÀºáÏò±ßÏß£©
-%   ParkSlotOffRoad (90)%  Â·ÍâÍ£³µÎ»£¬Ö»Ğè²âÁ¿ÑØµÀÂ·ĞĞÊ»·½ÏòµÄ¿ªÊ¼µãºÍÍ£Ö¹µã
-%   ParkSlotOffRoad_Start (91)%  Â·ÍâÍ£³µÎ»£¬Ö»Ğè²âÁ¿ÑØµÀÂ·ĞĞÊ»·½ÏòµÄ¿ªÊ¼µã
-%   ParkSlotOffRoad_Stop  (92)%  Â·ÍâÍ£³µÎ»£¬Ö»Ğè²âÁ¿ÑØµÀÂ·ĞĞÊ»·½ÏòµÄÍ£Ö¹µã
-%   RoadChange (100)% ³µµÀ¿í¶È±ä»¯µã£¬ÈçÁ½µã¼ä¾àÀë°µÊ¾³µµÀ¿í¶È£¬Ôò´ËÊ±Á½µãÑ¡È¡Ó¦±£Ö¤£¬Á½µãÁ¬ÏßÍ¬²âÁ¿´¦µÄ³µµÀ´¹Ö±£¬»òÕßÔö¼Ó³µµÀ¿í¶ÈµÄÓò¡£
-%   SpeedLimit (110)%ÏŞËÙ±êÖ¾£¬µãÀàĞÍ
-%   GroundArrow (120)%µØÉÏ¼ıÍ·£¨²Î¿¼EPM3µÄ¼ıÍ·Î»ÖÃ¶¨Òå£©£¬µãÀàĞÍ
-%   TrafficLight (130)%½»Í¨µÆÎ»ÖÃ£¬µãÀàĞÍ
-%   UnClassified (180)%ÆäËû
+%   XCrossing_Stop (11) % åå­—è·¯å£åœæ­¢çº¿
+%   XCrossing_Start (12) % åå­—è·¯å£ç›®æ ‡è½¦é“è¿›å…¥çº¿
+%   TCrossing_Stop (21)%Tå­—è·¯å£åœæ­¢çº¿
+%   TCrossing_Start (22)%Tå­—è·¯å£ç›®æ ‡è½¦é“è¿›å…¥çº¿
+%   ZCrossing (30)%äººè¡Œæ¨ªé“çº¿
+%   Stop_1 (51)%è¾¹çº¿1ï¼ˆæ²¿è½¦é“æ¨ªå‘è¾¹çº¿ï¼‰ï¼Œæ‘†æ¸¡è½¦åœè½¦ç‚¹ã€‚åœè½¦ç‚¹å¯èƒ½æ²¡æœ‰å®é™…çš„æ ‡è®°ï¼Œè¯·æŒ‰ä¼°è®¡çš„åœè½¦ç‚¹é€‰å–ä½ç½®ï¼Œæ¯”å¦‚æ·»åŠ 2å·æ¥¼é—¨å£çš„åœè½¦ç‚¹
+%   Stop_2 (52)%è¾¹çº¿2ï¼ˆæ²¿è½¦é“æ¨ªå‘è¾¹çº¿ï¼‰
+%   LeftTurn_Stop (61)% å·¦è½¬Lå½¢è·¯å£åœæ­¢çº¿
+%   LeftTurn_Start (62)% å·¦è½¬Lå½¢è·¯å£è¿›å…¥çº¿
+%   RightTurn_Stop (71)% å³è½¬Lå½¢è·¯å£åœæ­¢çº¿
+%   RightTurn_Start (72)% å³è½¬Lå½¢è·¯å£è¿›å…¥çº¿
+%   ParkSlotOnRoad_Stop (81)% è·¯è¾¹åœè½¦ä½è¾¹çº¿1ï¼ˆæ²¿è½¦é“æ¨ªå‘è¾¹çº¿ï¼‰
+%   ParkSlotOnRoad_Start (82)% è·¯è¾¹åœè½¦ä½è¾¹çº¿2ï¼ˆæ²¿è½¦é“æ¨ªå‘è¾¹çº¿ï¼‰
+%   ParkSlotOffRoad (90)%  è·¯å¤–åœè½¦ä½ï¼Œåªéœ€æµ‹é‡æ²¿é“è·¯è¡Œé©¶æ–¹å‘çš„å¼€å§‹ç‚¹å’Œåœæ­¢ç‚¹
+%   ParkSlotOffRoad_Start (91)%  è·¯å¤–åœè½¦ä½ï¼Œåªéœ€æµ‹é‡æ²¿é“è·¯è¡Œé©¶æ–¹å‘çš„å¼€å§‹ç‚¹
+%   ParkSlotOffRoad_Stop  (92)%  è·¯å¤–åœè½¦ä½ï¼Œåªéœ€æµ‹é‡æ²¿é“è·¯è¡Œé©¶æ–¹å‘çš„åœæ­¢ç‚¹
+%   RoadChange (100)% è½¦é“å®½åº¦å˜åŒ–ç‚¹ï¼Œå¦‚ä¸¤ç‚¹é—´è·ç¦»æš—ç¤ºè½¦é“å®½åº¦ï¼Œåˆ™æ­¤æ—¶ä¸¤ç‚¹é€‰å–åº”ä¿è¯ï¼Œä¸¤ç‚¹è¿çº¿åŒæµ‹é‡å¤„çš„è½¦é“å‚ç›´ï¼Œæˆ–è€…å¢åŠ è½¦é“å®½åº¦çš„åŸŸã€‚
+%   SpeedLimit (110)%é™é€Ÿæ ‡å¿—ï¼Œç‚¹ç±»å‹
+%   GroundArrow (120)%åœ°ä¸Šç®­å¤´ï¼ˆå‚è€ƒEPM3çš„ç®­å¤´ä½ç½®å®šä¹‰ï¼‰ï¼Œç‚¹ç±»å‹
+%   TrafficLight (130)%äº¤é€šç¯ä½ç½®ï¼Œç‚¹ç±»å‹
+%   UnClassified (180)%å…¶ä»–
 %   end
 %-------------------------------------------------------
 %             t_in_utm,...
@@ -615,7 +615,7 @@ if(mod(step,2)==1)
 
     %find local landmarks
     option.firstTime=1;
-    option.clockWise=0;  %0 for counter-clockwise£¬1 for clockwise    
+    option.clockWise=0;  %0 for counter-clockwiseï¼Œ1 for clockwise    
     [landmarks_in_proximity_id_in_front_lcs, landmarks_in_proximity_id_in_rear_lcs] = ...
         quest_map4landmark_new_lane (x_in_lcs, y_in_lcs, landmarks_lcs,middleLine_lcs.coordinate(:,1:2), middleLine_lcs.Vertex_index,configuration,option);
 
@@ -639,7 +639,7 @@ if(mod(step,2)==0)
     %locate objects in lanes    
     %decide object list location in lanes
     option.firstTime=1;
-    option.clockWise=0;  %0 for counter-clockwise£¬1 for clockwise
+    option.clockWise=0;  %0 for counter-clockwiseï¼Œ1 for clockwise
     object_list_update_lcs  = object_localization(object_list_lcs, object_num_lcs, innerLine_lcs.coordinate,innerLine_lcs.Vertex_index,...
                                                           middleLine_lcs.coordinate(:,1:2),middleLine_lcs.Vertex_index,...
                                                           outerLine_lcs.coordinate,outerLine_lcs.Vertex_index,...
@@ -650,7 +650,7 @@ end
 if(mod(step,2)==1)
     %find the closest object in ego lane (probably CIPO)
     option.firstTime=1;
-    option.clockWise=0;  %0 for counter-clockwise£¬1 for clockwise    
+    option.clockWise=0;  %0 for counter-clockwiseï¼Œ1 for clockwise    
     [obj_closest_in_path_ID, obj_closest_in_next_path_ID,ego_location_lcs] = objects_of_interest_fast(object_list_update_lcs,object_num_lcs,...
             x_in_lcs, y_in_lcs, innerLine_lcs.coordinate, innerLine_lcs.Vertex_index,...
             middleLine_lcs.coordinate(:,1:2), middleLine_lcs.Vertex_index,...

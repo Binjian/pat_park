@@ -1,16 +1,16 @@
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 
 
 function draw_map_nav_lnm (innerLine_coordinate, innerLine_Vertex_index,...
                                 middleLine_coordinate, middleLine_Vertex_index,...
                                 outerLine_coordinate, outerLine_Vertex_index,...
                                 configuration)
-%-------------------------------------------------------
-% Patac
-% Centro Politecnico Superior
-% Robotics and Real Time Group
-% Authors:  J. Neira, J. Tardos
-% Date   :  7-2004
-%-------------------------------------------------------
 %-------------------------------------------------------
 %global configuration;
 

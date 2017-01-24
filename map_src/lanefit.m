@@ -1,4 +1,11 @@
-
+function cubic_poly_coef  = lanefit(veh_state, flag, middleLine, outerLine, right_shift, ...
+  lane_pos, point_num)
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
 %right_shift = 2; assuming middle lane mark is used, this parameter gives
 %the right shift of line fitting result.
 %point_num = 50; the point of number used for line fitting. assuming point
@@ -9,10 +16,10 @@
 %x0 y0 is the vehicle locaton referring to the GCS
 
 % x0 =  ; y0 =   ;
-% flag =   ;    0ÄæÊ±Õë, 1Ë³Ê±Õë 
-% ang = pi;   xºÍÔ­×ø±êÏµºáÖáÄæÊ±Õë·½ÏòÉÏµÄ¼Ğ½Ç£¬xÎª³µÁ¾ĞĞÊ»·½Ïò 
-function cubic_poly_coef  = lanefit(veh_state, flag, middleLine, outerLine, right_shift, ...
-  lane_pos, point_num)
+% flag =   ;    0é€†æ—¶é’ˆ, 1é¡ºæ—¶é’ˆ 
+% ang = pi;   xå’ŒåŸåæ ‡ç³»æ¨ªè½´é€†æ—¶é’ˆæ–¹å‘ä¸Šçš„å¤¹è§’ï¼Œxä¸ºè½¦è¾†è¡Œé©¶æ–¹å‘ 
+%-------------------------------------------------------
+
 
 %Find the closest side
 p =  veh_state(1:2)';
@@ -31,7 +38,7 @@ lanepoint_behind = find(side_lane_dist<dist2StartCorner_veh);
 cor_index = max(lanepoint_behind);
 cor_index = cor_index + middleLine.Vertex_index(sideIndex,1)-1;
 
- %  ¨¦?¡ë??¨C?¨C???¡® 
+ %  Ã©?â€°??â€“?â€“???â€˜ 
  if flag <0.5
       side_num_after = middleLine.Vertex_index(sideIndex,2) - cor_index;
       side_num_before = cor_index - middleLine.Vertex_index(sideIndex,1);

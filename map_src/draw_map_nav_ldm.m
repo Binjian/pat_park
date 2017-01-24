@@ -1,14 +1,14 @@
-
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
+%-------------------------------------------------------
 
 function draw_map_nav_ldm (landmarks,line_wid, configuration)
-%-------------------------------------------------------
-% University of Zaragoza
-% Centro Politecnico Superior
-% Robotics and Real Time Group
-% Authors:  J. Neira, J. Tardos
-% Date   :  7-2004
-%-------------------------------------------------------
-%-------------------------------------------------------
+
 %global configuration;
 
 %figure(configuration.ground); clf; axis equal; hold on;
@@ -34,7 +34,7 @@ function draw_map_nav_ldm (landmarks,line_wid, configuration)
 coder.extrinsic('num2str');
 
 for i = 1:size (landmarks,1)
-    switch(landmarks(i,5))    %地标中颜色符号表示可在下方修�?
+    switch(landmarks(i,5))    %åœ°æ ‡ä¸­é¢œè‰²ç¬¦å·è¡¨ç¤ºå¯åœ¨ä¸‹æ–¹ä¿®æ”?
     case (120)   
         color = '*b';    %groundarrow = groundarrow + 1;
     case(62)   

@@ -1,27 +1,23 @@
-
-
-function  [x,y,utmzone,utmhemi] = wgs2utm(Lat,Lon,utmzone,utmhemi)
-% -------------------------------------------------------------------------
 % [x,y,utmzone] = wgs2utm(Lat,Lon,Zone)
-%
-% Description:
+% @verbatim
+% \brief Description:
 %    Convert WGS84 coordinates (Latitude, Longitude) into UTM coordinates
 %    (northing, easting) according to (optional) input UTM zone and
 %    hemisphere.
 %
 % Input:
-%    Lat: WGS84 Latitude scalar, vector or array in decimal degrees.  
-%    Lon: WGS84 Longitude scalar, vector or array in decimal degrees. 
-%    utmzone (optional): UTM longitudinal zone. Scalar or same size as Lat
+% \param   Lat: WGS84 Latitude scalar, vector or array in decimal degrees.  
+% \param   Lon: WGS84 Longitude scalar, vector or array in decimal degrees. 
+% \param   utmzone (optional): UTM longitudinal zone. Scalar or same size as Lat
 %       and Lon.
-%    utmhemi (optional): UTM hemisphere as a single character, 'N' or 'S',
+% \param   utmhemi (optional): UTM hemisphere as a single character, 'N' or 'S',
 %       or array of 'N' or 'S' characters of same size as Lat and Lon.
 %
 % Output:
-%    x: UTM easting in meters.
-%    y: UTM northing in meters.
-%    utmzone: UTM longitudinal zone.
-%    utmhemi: UTM hemisphere as array of 'N' or 'S' characters. 
+%  \param  x: UTM easting in meters.
+%  \param  y: UTM northing in meters.
+%  \param  utmzone: UTM longitudinal zone.
+%  \param  utmhemi: UTM hemisphere as array of 'N' or 'S' characters. 
 %
 % Author notes:
 %    I downloaded and tried deg2utm.m from Rafael Palacios but found
@@ -56,14 +52,17 @@ function  [x,y,utmzone,utmhemi] = wgs2utm(Lat,Lon,utmzone,utmhemi)
 %    utmhemi = char(78 + 5.*round(rand(3)))
 %    [x3,y3,utmzone3,utmhemi3] = wgs2utm(Lat,Lon,utmzone,utmhemi)
 %
-% Author: 
+% \Author: 
 %   Alexandre Schimel
 %   MetOcean Solutions Ltd
 %   New Plymouth, New Zealand
 %
 % Version 2:
 %   February 2011
+% @endverbatim
 %-------------------------------------------------------------------------
+
+function  [x,y,utmzone,utmhemi] = wgs2utm(Lat,Lon,utmzone,utmhemi)
 
 %% Argument checking
 if ~sum(double(nargin==[2,4]))

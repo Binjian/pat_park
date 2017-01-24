@@ -4,6 +4,13 @@ function [obj_closest_in_path_ID, obj_closest_in_next_path_ID, ego_location] = o
 	middleLine_coordinate, middleLine_Vertex_index,...
 	outerLine_coordinate, outerLine_Vertex_index,...
 	 option)
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 
 inside 		= zeros(1,3);
 p = [x_in_lcs,y_in_lcs];

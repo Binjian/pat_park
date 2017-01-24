@@ -1,3 +1,10 @@
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 function  inside =point_inside_lane_offset(p,coordinate, Vertex_index,offset)
 % return flag -1 for inside; 1 for outside 
 

@@ -5,6 +5,13 @@ function [objects_in_ego_lane_sorted_behind, objects_in_next_lane_sorted_behind,
 	middleLine_coordinate, middleLine_Vertex_index,...
 	outerLine_coordinate, outerLine_Vertex_index,...
 	 option)
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 
 inside 		= zeros(1,3);
 p = [x_in_lcs,y_in_lcs];

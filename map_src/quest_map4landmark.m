@@ -1,11 +1,18 @@
+%-------------------------------------------------------
+% Patac
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
+%-------------------------------------------------------
 function [landmarks_in_proximity_id_in_front, landmarks_in_proximity_id_in_rear] = quest_map4landmark (x_in_lcs, y_in_lcs, landmarks, middleLine_coordinate, middleLine_Vertex_index,...
 	configuration,option)
 %-------------------------------------------------------
 % Patac
-% Centro Politecnico Superior
-% Robotics and Real Time Group
-% Authors:  J. Neira, J. Tardos
-% Date   :  7-2004
+% SHD
+% Software
+% Authors:  Binjian Xin
+% Date   :  2017-1
 % ground and veh_pose for setting observation.ground
 % landmarks and landmarks_in_proximity in column vector.
 %-------------------------------------------------------
